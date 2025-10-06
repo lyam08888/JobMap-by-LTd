@@ -63,6 +63,33 @@
         #toggle-panel-btn i { transition: transform 0.3s ease; }
         .search-container.collapsed #toggle-panel-btn i { transform: rotate(180deg); }
         
+        /* Smooth scrolling for results list */
+        #results-list {
+            scroll-behavior: smooth;
+        }
+        #results-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        #results-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        #results-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        #results-list::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Enhanced card animations */
+        [data-id] {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        [data-id]:hover {
+            transform: translateX(4px);
+        }
+        
         /* Style pour les marqueurs personnalisés avec icônes */
         .custom-marker-icon {
             display: flex;
@@ -269,8 +296,9 @@
             
             <!-- Menu Utilisateur -->
             <div class="absolute top-6 left-6 pointer-events-auto">
-                <button id="user-menu-button" class="w-14 h-14 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-blue-500 transition">
+                <button id="user-menu-button" class="w-14 h-14 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-blue-500 transition-all duration-200 hover:scale-110 hover:shadow-xl relative">
                     <i class="fas fa-user-circle text-4xl"></i>
+                    <span id="notification-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold pulse">0</span>
                 </button>
                 <div id="user-menu" class="absolute top-16 left-0 bg-white rounded-xl shadow-2xl w-64 p-2 origin-top-left transform scale-95 opacity-0 hidden">
                     <!-- Contenu du menu dynamique -->
@@ -770,6 +798,7 @@
                     if (itemType === 'job') savedJobs = savedItems;
                     else savedCandidates = savedItems;
                     
+                    updateNotificationBadge();
                     return savedItems.includes(itemId);
                 }
 
@@ -789,6 +818,7 @@
                     };
                     applications.push(application);
                     localStorage.setItem('applications', JSON.stringify(applications));
+                    updateNotificationBadge();
                     showToast('Candidature envoyée avec succès !', 'success');
                 }
 
@@ -829,9 +859,11 @@
                     const modal = document.getElementById(modalId);
                     if (modal) {
                         modal.classList.remove('hidden');
+                        // Force reflow for animation
+                        modal.offsetHeight;
                         setTimeout(() => {
                             modal.querySelector('.modal-panel').classList.remove('hidden');
-                        }, 10);
+                        }, 50);
                     }
                 }
 
@@ -840,7 +872,7 @@
                         const panel = modal.querySelector('.modal-panel');
                         if (panel && !panel.classList.contains('hidden')) {
                             panel.classList.add('hidden');
-                            setTimeout(() => modal.classList.add('hidden'), 200);
+                            setTimeout(() => modal.classList.add('hidden'), 300);
                         } else {
                              modal.classList.add('hidden');
                         }
@@ -885,6 +917,9 @@
                             <a href="#" id="search-history-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-history mr-2"></i>Historique de recherche</a>`;
                     }
                     menuContent.innerHTML = html;
+                    
+                    // Update notification badge
+                    updateNotificationBadge();
 
                     if (currentUser) {
                         menuContent.querySelector('#logout-btn')?.addEventListener('click', (e) => { e.preventDefault(); currentUser = null; updateAuthUI(); showToast('Vous avez été déconnecté.', 'info'); });
@@ -901,6 +936,25 @@
                         menuContent.querySelector('#signup-recruiter-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('employer-signup-modal'); });
                         menuContent.querySelector('#signup-employer-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('employer-signup-modal'); });
                         menuContent.querySelector('#search-history-btn')?.addEventListener('click', (e) => { e.preventDefault(); openSearchHistoryModal(); });
+                    }
+                }
+                
+                function updateNotificationBadge() {
+                    const badge = document.getElementById('notification-badge');
+                    if (!badge) return;
+                    
+                    let count = 0;
+                    if (currentUser?.type === 'candidate') {
+                        count = applications.length;
+                    } else if (currentUser?.type === 'recruiter') {
+                        count = savedCandidates.length;
+                    }
+                    
+                    if (count > 0) {
+                        badge.textContent = count > 9 ? '9+' : count;
+                        badge.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
                     }
                 }
 
@@ -1247,26 +1301,26 @@
                     let actionButtonsHtml = '';
                     
                     // Favorite button
-                    actionButtonsHtml += `<button onclick="toggleFavorite(${item.id}, '${item.type}'); showDetailsModal(${item.id});" class="bg-red-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-600 transition shadow-lg flex items-center gap-2">
+                    actionButtonsHtml += `<button onclick="toggleFavorite(${item.id}, '${item.type}'); showDetailsModal(${item.id});" class="btn-primary bg-red-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-600 transition shadow-lg flex items-center gap-2">
                         <i class="${isSaved ? 'fas' : 'far'} fa-heart"></i> ${isSaved ? 'Retirer' : 'Sauvegarder'}
                     </button>`;
                     
                     // Route buttons
                     if (!routeStartPoint) {
-                        actionButtonsHtml += `<button id="set-start-route-btn" data-id="${item.id}" class="bg-sky-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-map-pin"></i> Départ</button>`;
+                        actionButtonsHtml += `<button id="set-start-route-btn" data-id="${item.id}" class="btn-primary bg-sky-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-map-pin"></i> Départ</button>`;
                     } else if (routeStartPoint.id !== item.id) {
-                        actionButtonsHtml += `<button id="calculate-route-btn" data-id="${item.id}" class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-route"></i> Arrivée</button>`;
+                        actionButtonsHtml += `<button id="calculate-route-btn" data-id="${item.id}" class="btn-primary bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-route"></i> Arrivée</button>`;
                     }
                     
                     // Type-specific buttons
                     if (item.type === 'candidate' && currentUser?.type === 'recruiter') {
-                         actionButtonsHtml += `<button id="match-candidate-btn" data-id="${item.id}" class="bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-link"></i> Associer</button>`;
+                         actionButtonsHtml += `<button id="match-candidate-btn" data-id="${item.id}" class="btn-primary bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-link"></i> Associer</button>`;
                     }
                     
                     if (item.type === 'job' && currentUser?.type === 'candidate') {
                         const hasApplied = applications.some(app => app.jobId === item.id && app.candidateEmail === currentUser.email);
                         if (!hasApplied) {
-                            actionButtonsHtml += `<button id="apply-btn" data-id="${item.id}" class="bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-paper-plane"></i> Postuler</button>`;
+                            actionButtonsHtml += `<button id="apply-btn" data-id="${item.id}" class="btn-primary bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-paper-plane"></i> Postuler</button>`;
                         } else {
                             actionButtonsHtml += `<span class="bg-gray-300 text-gray-600 font-bold py-3 px-6 rounded-lg flex items-center gap-2"><i class="fas fa-check-circle"></i> Candidature envoyée</span>`;
                         }
@@ -1602,10 +1656,16 @@
                     if (target && candidateToMatch) {
                         const job = data.find(j => j.id == target.dataset.jobId);
                         if (job) { 
-                            calculateRoute(candidateToMatch.location, job.location); 
-                            showToast(`Itinéraire calculé pour ${candidateToMatch.name} vers ${job.title}.`, 'success'); 
-                            candidateToMatch = null; 
-                            closeAllModals(); 
+                            // Add loading state
+                            target.disabled = true;
+                            target.innerHTML = '<div class="spinner inline-block"></div><span class="ml-2">Calcul...</span>';
+                            
+                            setTimeout(() => {
+                                calculateRoute(candidateToMatch.location, job.location); 
+                                showToast(`✨ Itinéraire calculé pour ${candidateToMatch.name} vers ${job.title}!`, 'success'); 
+                                candidateToMatch = null; 
+                                closeAllModals(); 
+                            }, 500);
                         }
                     }
                 });
@@ -1688,6 +1748,39 @@
                 });
                 
                 clearRouteBtn.addEventListener('click', clearRoute);
+                
+                // Panel toggle functionality
+                const togglePanelBtn = document.getElementById('toggle-panel-btn');
+                const searchPanel = document.getElementById('search-panel');
+                togglePanelBtn.addEventListener('click', function() {
+                    searchPanel.classList.toggle('collapsed');
+                    const icon = this.querySelector('i');
+                    if (searchPanel.classList.contains('collapsed')) {
+                        icon.style.transform = 'rotate(180deg)';
+                        showToast('Panneau réduit', 'info');
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    // Escape key to close modals
+                    if (e.key === 'Escape') {
+                        closeAllModals();
+                    }
+                    // Ctrl/Cmd + F to focus search
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                        e.preventDefault();
+                        searchInput.focus();
+                        showToast('🔍 Recherche activée', 'info');
+                    }
+                    // Ctrl/Cmd + P to toggle panel
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                        e.preventDefault();
+                        togglePanelBtn.click();
+                    }
+                });
                 
                 // --- INITIALISATION FINALE ---
                 updateAuthUI();
