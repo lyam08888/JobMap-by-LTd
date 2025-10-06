@@ -407,6 +407,13 @@
                 <div class="border-l mx-1"></div>
                 <button id="clear-route-btn" class="w-10 h-10 rounded-md text-red-500 hover:bg-red-50 transition"><i class="fas fa-times"></i></button>
             </div>
+            
+            <!-- Bouton d'aide -->
+            <div class="absolute bottom-6 right-6 pointer-events-auto">
+                <button id="help-btn" class="w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 flex items-center justify-center">
+                    <i class="fas fa-question text-2xl"></i>
+                </button>
+            </div>
 
         </div>
     </div>
@@ -647,6 +654,64 @@
             <h2 class="text-2xl font-bold text-center mb-6">Tableau de bord Recruteur</h2>
             <div id="dashboard-content">
                 <!-- Le tableau de bord sera injecté ici -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Aide / Raccourcis -->
+    <div id="help-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-2xl m-4 p-8 transform hidden relative max-h-[90vh] overflow-y-auto">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
+            <h2 class="text-2xl font-bold text-center mb-6"><i class="fas fa-question-circle text-blue-600 mr-2"></i>Aide & Raccourcis</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fas fa-keyboard mr-2 text-blue-600"></i>Raccourcis clavier</h3>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                            <span class="text-gray-700">Fermer les modals</span>
+                            <kbd class="px-3 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-sm">Esc</kbd>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                            <span class="text-gray-700">Focus sur la recherche</span>
+                            <kbd class="px-3 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-sm">Ctrl + F</kbd>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                            <span class="text-gray-700">Basculer le panneau</span>
+                            <kbd class="px-3 py-1 bg-white border border-gray-300 rounded shadow-sm font-mono text-sm">Ctrl + P</kbd>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fas fa-lightbulb mr-2 text-yellow-500"></i>Astuces</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-green-600 mt-1"></i><span>Utilisez les filtres avancés pour affiner votre recherche</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-green-600 mt-1"></i><span>Sauvegardez vos recherches fréquentes pour y accéder rapidement</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-green-600 mt-1"></i><span>Le badge de notification vous indique le nombre de favoris/candidatures</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-green-600 mt-1"></i><span>Cliquez sur "Départ" puis "Arrivée" pour calculer un itinéraire</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-green-600 mt-1"></i><span>Utilisez le matching pour trouver les meilleures offres pour un candidat</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fas fa-star mr-2 text-yellow-500"></i>Fonctionnalités</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <div class="font-semibold text-blue-800 mb-1"><i class="fas fa-search mr-2"></i>Recherche avancée</div>
+                            <p class="text-sm text-gray-600">Filtrez par type de contrat, expérience, salaire et télétravail</p>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg">
+                            <div class="font-semibold text-purple-800 mb-1"><i class="fas fa-link mr-2"></i>Matching intelligent</div>
+                            <p class="text-sm text-gray-600">Trouvez les meilleures correspondances candidat-offre</p>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded-lg">
+                            <div class="font-semibold text-green-800 mb-1"><i class="fas fa-route mr-2"></i>Calcul d'itinéraire</div>
+                            <p class="text-sm text-gray-600">Planifiez vos déplacements en voiture, vélo ou à pied</p>
+                        </div>
+                        <div class="bg-red-50 p-3 rounded-lg">
+                            <div class="font-semibold text-red-800 mb-1"><i class="fas fa-heart mr-2"></i>Favoris</div>
+                            <p class="text-sm text-gray-600">Sauvegardez vos offres et candidats préférés</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1751,7 +1816,6 @@
                 
                 // Panel toggle functionality
                 const togglePanelBtn = document.getElementById('toggle-panel-btn');
-                const searchPanel = document.getElementById('search-panel');
                 togglePanelBtn.addEventListener('click', function() {
                     searchPanel.classList.toggle('collapsed');
                     const icon = this.querySelector('i');
@@ -1780,6 +1844,16 @@
                         e.preventDefault();
                         togglePanelBtn.click();
                     }
+                    // ? or F1 to open help
+                    if (e.key === '?' || e.key === 'F1') {
+                        e.preventDefault();
+                        openModal('help-modal');
+                    }
+                });
+                
+                // Help button
+                document.getElementById('help-btn').addEventListener('click', () => {
+                    openModal('help-modal');
                 });
                 
                 // --- INITIALISATION FINALE ---
