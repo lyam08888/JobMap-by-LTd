@@ -270,6 +270,13 @@
                             <option value="salary-asc">Salaire (croissant)</option>
                         </select>
                     </div>
+                    <!-- Save Search Button -->
+                    <div class="mb-3 flex-shrink-0">
+                        <button id="save-search-btn" class="w-full px-3 py-2 text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 font-medium rounded-lg flex items-center justify-center gap-2 transition">
+                            <i class="fas fa-bookmark"></i>
+                            <span>Sauvegarder cette recherche</span>
+                        </button>
+                    </div>
                     <div id="results-count" class="text-sm font-medium text-gray-500 mb-2 flex-shrink-0 hidden"></div>
                     <div id="results-list" class="flex-1 overflow-y-auto pr-2 hidden">
                          <div id="loader" class="text-center py-10 hidden">
@@ -389,22 +396,103 @@
     
     <!-- Modal Mon Profil Candidat -->
     <div id="profile-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
-        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-md m-4 p-8 transform hidden relative">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-2xl m-4 p-8 transform hidden relative max-h-[90vh] overflow-y-auto">
              <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
             <h2 class="text-2xl font-bold text-center mb-6">Mon Profil</h2>
-            <p>Ici s'afficheront les informations du profil candidat.</p>
+            <form id="profile-form">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
+                        <input type="text" name="name" id="profile-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Titre professionnel</label>
+                        <input type="text" name="title" id="profile-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" name="email" id="profile-email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                        <input type="tel" name="phone" id="profile-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Ville</label>
+                        <input type="text" name="city" id="profile-city" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Années d'expérience</label>
+                        <select name="experience" id="profile-experience" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="Débutant">Débutant</option>
+                            <option value="Junior">Junior (1-3 ans)</option>
+                            <option value="Confirmé">Confirmé (3-7 ans)</option>
+                            <option value="Senior">Senior (7+ ans)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Prétention salariale (€/an)</label>
+                        <input type="number" name="expectedSalary" id="profile-salary" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" min="20000" step="1000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Compétences (séparées par des virgules)</label>
+                        <input type="text" name="skills" id="profile-skills" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="JavaScript, React, Node.js">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Disponibilité</label>
+                        <select name="availability" id="profile-availability" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="Immédiate">Immédiate</option>
+                            <option value="1 mois">Sous 1 mois</option>
+                            <option value="2 mois">Sous 2 mois</option>
+                            <option value="3 mois">Sous 3 mois</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Préférence télétravail</label>
+                        <select name="remotePreference" id="profile-remote" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="Présentiel">Présentiel</option>
+                            <option value="Hybride">Hybride</option>
+                            <option value="Remote">100% Remote</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="w-full mt-6 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Sauvegarder le profil</button>
+            </form>
         </div>
     </div>
 
     <!-- Modal de Matching -->
     <div id="match-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
-        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-xl m-4 p-8 transform hidden relative max-h-[90vh] flex flex-col">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-3xl m-4 p-8 transform hidden relative max-h-[90vh] flex flex-col">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
             <div id="match-modal-header">
-                <h2 class="text-2xl font-bold text-center mb-6">Associer le candidat à une offre</h2>
+                <h2 class="text-2xl font-bold text-center mb-1">Associer le candidat à une offre</h2>
+                <p class="text-center text-gray-500 mb-4">Offres triées par compatibilité</p>
             </div>
             <div id="match-modal-list" class="overflow-y-auto">
                 <!-- La liste des offres sera injectée ici -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Recherches Sauvegardées -->
+    <div id="saved-searches-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-2xl m-4 p-8 transform hidden relative max-h-[90vh] overflow-y-auto">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
+            <h2 class="text-2xl font-bold text-center mb-6">Mes Recherches Sauvegardées</h2>
+            <div id="saved-searches-content">
+                <!-- Les recherches sauvegardées seront injectées ici -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Historique de Recherche -->
+    <div id="search-history-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-2xl m-4 p-8 transform hidden relative max-h-[90vh] overflow-y-auto">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
+            <h2 class="text-2xl font-bold text-center mb-6">Historique de Recherche</h2>
+            <div id="search-history-content">
+                <!-- L'historique sera injecté ici -->
             </div>
         </div>
     </div>
@@ -549,6 +637,9 @@
                 let savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
                 let savedCandidates = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
                 let applications = JSON.parse(localStorage.getItem('applications') || '[]');
+                let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+                let savedSearches = JSON.parse(localStorage.getItem('savedSearches') || '[]');
+                let userProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
 
                 // --- FONCTIONS UTILITAIRES (CORRECTION: restaurées) ---
 
@@ -677,12 +768,21 @@
                                 <a href="#" id="post-job-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-plus-circle mr-2"></i>Poster une offre</a>
                                 <a href="#" id="dashboard-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-chart-line mr-2"></i>Tableau de bord</a>
                                 <a href="#" id="view-favorites-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-heart mr-2"></i>Favoris</a>
+                                <a href="#" id="saved-searches-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-bookmark mr-2"></i>Recherches sauvegardées</a>
                             ` : ''}
                             ${currentUser.type === 'candidate' ? `
                                 <a href="#" id="my-profile-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-user mr-2"></i>Mon Profil</a>
                                 <a href="#" id="my-applications-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-file-alt mr-2"></i>Mes candidatures</a>
                                 <a href="#" id="view-favorites-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-heart mr-2"></i>Favoris</a>
+                                <a href="#" id="saved-searches-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-bookmark mr-2"></i>Recherches sauvegardées</a>
                             ` : ''}
+                            ${currentUser.type === 'employer' ? `
+                                <a href="#" id="post-job-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-plus-circle mr-2"></i>Poster une offre</a>
+                                <a href="#" id="dashboard-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-chart-line mr-2"></i>Tableau de bord</a>
+                                <a href="#" id="view-favorites-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-heart mr-2"></i>Favoris</a>
+                                <a href="#" id="saved-searches-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-bookmark mr-2"></i>Recherches sauvegardées</a>
+                            ` : ''}
+                            <a href="#" id="search-history-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-history mr-2"></i>Historique de recherche</a>
                             <hr class="my-2">
                             <a href="#" id="logout-btn" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md"><i class="fas fa-sign-out-alt mr-2"></i>Se déconnecter</a>`;
                     } else {
@@ -691,23 +791,43 @@
                             <p class="px-4 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase">S'inscrire</p>
                             <a href="#" id="signup-candidate-btn" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-user-graduate w-5 text-center text-emerald-500"></i><span>Je suis candidat</span></a>
                             <a href="#" id="signup-recruiter-btn" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-user-tie w-5 text-center text-indigo-500"></i><span>Je suis recruteur</span></a>
-                            <a href="#" id="signup-employer-btn" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-building w-5 text-center text-sky-500"></i><span>Je suis employeur</span></a>`;
+                            <a href="#" id="signup-employer-btn" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-building w-5 text-center text-sky-500"></i><span>Je suis employeur</span></a>
+                            <hr class="my-2">
+                            <a href="#" id="search-history-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-history mr-2"></i>Historique de recherche</a>`;
                     }
                     menuContent.innerHTML = html;
 
                     if (currentUser) {
                         menuContent.querySelector('#logout-btn')?.addEventListener('click', (e) => { e.preventDefault(); currentUser = null; updateAuthUI(); showToast('Vous avez été déconnecté.', 'info'); });
                         menuContent.querySelector('#post-job-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('post-job-modal'); });
-                        menuContent.querySelector('#my-profile-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('profile-modal'); });
+                        menuContent.querySelector('#my-profile-btn')?.addEventListener('click', (e) => { e.preventDefault(); openProfileModal(); });
                         menuContent.querySelector('#view-favorites-btn')?.addEventListener('click', (e) => { e.preventDefault(); openFavoritesModal(); });
                         menuContent.querySelector('#my-applications-btn')?.addEventListener('click', (e) => { e.preventDefault(); openApplicationsModal(); });
                         menuContent.querySelector('#dashboard-btn')?.addEventListener('click', (e) => { e.preventDefault(); openDashboardModal(); });
+                        menuContent.querySelector('#saved-searches-btn')?.addEventListener('click', (e) => { e.preventDefault(); openSavedSearchesModal(); });
+                        menuContent.querySelector('#search-history-btn')?.addEventListener('click', (e) => { e.preventDefault(); openSearchHistoryModal(); });
                     } else {
                         menuContent.querySelector('#login-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('login-modal'); });
                         menuContent.querySelector('#signup-candidate-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('candidate-signup-modal'); });
                         menuContent.querySelector('#signup-recruiter-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('employer-signup-modal'); });
                         menuContent.querySelector('#signup-employer-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('employer-signup-modal'); });
+                        menuContent.querySelector('#search-history-btn')?.addEventListener('click', (e) => { e.preventDefault(); openSearchHistoryModal(); });
                     }
+                }
+
+                function openProfileModal() {
+                    const profile = userProfiles[currentUser.email] || {};
+                    document.getElementById('profile-name').value = profile.name || currentUser.name || '';
+                    document.getElementById('profile-title').value = profile.title || '';
+                    document.getElementById('profile-email').value = currentUser.email || '';
+                    document.getElementById('profile-phone').value = profile.phone || '';
+                    document.getElementById('profile-city').value = profile.city || '';
+                    document.getElementById('profile-experience').value = profile.experience || 'Junior';
+                    document.getElementById('profile-salary').value = profile.expectedSalary || '';
+                    document.getElementById('profile-skills').value = profile.skills || '';
+                    document.getElementById('profile-availability').value = profile.availability || 'Immédiate';
+                    document.getElementById('profile-remote').value = profile.remotePreference || 'Hybride';
+                    openModal('profile-modal');
                 }
 
                 function getUserLocation() {
@@ -747,13 +867,80 @@
                     candidateToMatch = data.find(c => c.id == candidateId);
                     if (!candidateToMatch) return;
                     const jobs = data.filter(item => item.type === 'job');
+                    
+                    // Calculate match scores
+                    const jobsWithScores = jobs.map(job => {
+                        let score = 0;
+                        let reasons = [];
+                        
+                        // Check skill matches
+                        const candidateSkills = candidateToMatch.tags.map(t => t.toLowerCase());
+                        const jobSkills = job.tags.map(t => t.toLowerCase());
+                        const skillMatches = candidateSkills.filter(s => jobSkills.includes(s));
+                        if (skillMatches.length > 0) {
+                            score += skillMatches.length * 20;
+                            reasons.push(`${skillMatches.length} compétence(s) en commun`);
+                        }
+                        
+                        // Check experience level match
+                        if (candidateToMatch.experience === job.experience) {
+                            score += 15;
+                            reasons.push('Niveau d\'expérience correspondant');
+                        }
+                        
+                        // Check salary compatibility
+                        if (candidateToMatch.expectedSalary && job.salary) {
+                            const jobMaxSalary = parseInt(job.salary.split('-')[1]);
+                            if (candidateToMatch.expectedSalary <= jobMaxSalary) {
+                                score += 10;
+                                reasons.push('Salaire compatible');
+                            }
+                        }
+                        
+                        // Check remote preference
+                        if (candidateToMatch.remote && job.remote === candidateToMatch.remote) {
+                            score += 10;
+                            reasons.push('Préférence télétravail compatible');
+                        }
+                        
+                        // Location proximity bonus
+                        if (candidateToMatch.city === job.city) {
+                            score += 15;
+                            reasons.push('Même localisation');
+                        }
+                        
+                        return { ...job, matchScore: score, matchReasons: reasons };
+                    });
+                    
+                    // Sort by score
+                    jobsWithScores.sort((a, b) => b.matchScore - a.matchScore);
+                    
                     const matchList = document.getElementById('match-modal-list');
                     const matchHeader = document.getElementById('match-modal-header');
-                    matchHeader.innerHTML = `<h2 class="text-2xl font-bold text-center mb-1">Associer ${candidateToMatch.name}</h2><p class="text-center text-gray-500 mb-4">Sélectionnez une offre ci-dessous.</p>`;
-                    matchList.innerHTML = jobs.length > 0 ? jobs.map(job => `
-                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg mb-2">
-                            <div><h4 class="font-semibold">${job.title}</h4><p class="text-sm text-gray-500">${job.company} - ${job.city}</p></div>
-                            <button class="select-match-job-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition" data-job-id="${job.id}">Sélectionner</button>
+                    matchHeader.innerHTML = `<h2 class="text-2xl font-bold text-center mb-1">Associer ${candidateToMatch.name}</h2><p class="text-center text-gray-500 mb-4">Offres triées par compatibilité</p>`;
+                    matchList.innerHTML = jobsWithScores.length > 0 ? jobsWithScores.map(job => `
+                        <div class="flex items-start justify-between bg-gray-50 p-4 rounded-lg mb-3 hover:bg-gray-100 transition">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <h4 class="font-semibold text-lg">${job.title}</h4>
+                                    <span class="px-2 py-1 text-xs rounded-full ${
+                                        job.matchScore >= 50 ? 'bg-green-100 text-green-800' :
+                                        job.matchScore >= 30 ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-gray-100 text-gray-800'
+                                    }">
+                                        ${job.matchScore}% compatible
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-1">${job.company} - ${job.city}</p>
+                                ${job.matchReasons.length > 0 ? `
+                                    <div class="flex flex-wrap gap-1 mt-2">
+                                        ${job.matchReasons.map(reason => `
+                                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">${reason}</span>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <button class="select-match-job-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition ml-4" data-job-id="${job.id}">Sélectionner</button>
                         </div>`).join('') : `<p class="text-center text-gray-500">Aucune offre d'emploi disponible.</p>`;
                     openModal('match-modal');
                 }
@@ -1029,6 +1216,13 @@
                     firstInteraction = true;
                     const query = searchInput.value.toLowerCase();
                     
+                    // Save to search history
+                    if (query && !searchHistory.includes(query)) {
+                        searchHistory.unshift(query);
+                        if (searchHistory.length > 20) searchHistory.pop();
+                        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                    }
+                    
                     const filteredData = data.filter(item => {
                         // Basic filter
                         if (currentFilter !== 'all' && item.type !== currentFilter) return false;
@@ -1060,6 +1254,130 @@
                     
                     displayData(filteredData, true);
                 }
+
+                // --- SAVED SEARCHES AND HISTORY ---
+                function saveCurrentSearch() {
+                    const query = searchInput.value;
+                    const searchName = prompt('Donnez un nom à cette recherche:', query || 'Ma recherche');
+                    if (!searchName) return;
+                    
+                    const savedSearch = {
+                        id: Date.now(),
+                        name: searchName,
+                        query: query,
+                        filter: currentFilter,
+                        advancedFilters: { ...advancedFilters },
+                        date: new Date().toISOString()
+                    };
+                    
+                    savedSearches.push(savedSearch);
+                    localStorage.setItem('savedSearches', JSON.stringify(savedSearches));
+                    showToast('Recherche sauvegardée !', 'success');
+                }
+
+                function loadSavedSearch(searchId) {
+                    const savedSearch = savedSearches.find(s => s.id === searchId);
+                    if (!savedSearch) return;
+                    
+                    searchInput.value = savedSearch.query;
+                    currentFilter = savedSearch.filter;
+                    advancedFilters = { ...savedSearch.advancedFilters };
+                    
+                    // Update UI
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.filter === currentFilter);
+                    });
+                    
+                    // Update advanced filters UI
+                    if (savedSearch.advancedFilters.contractType) {
+                        document.getElementById('filter-contract').value = savedSearch.advancedFilters.contractType;
+                    }
+                    if (savedSearch.advancedFilters.experience) {
+                        document.getElementById('filter-experience').value = savedSearch.advancedFilters.experience;
+                    }
+                    if (savedSearch.advancedFilters.remote) {
+                        document.getElementById('filter-remote').value = savedSearch.advancedFilters.remote;
+                    }
+                    if (savedSearch.advancedFilters.salaryMin) {
+                        document.getElementById('filter-salary').value = savedSearch.advancedFilters.salaryMin;
+                    }
+                    
+                    performSearch();
+                    closeAllModals();
+                }
+
+                function deleteSavedSearch(searchId) {
+                    savedSearches = savedSearches.filter(s => s.id !== searchId);
+                    localStorage.setItem('savedSearches', JSON.stringify(savedSearches));
+                    openSavedSearchesModal();
+                }
+
+                function openSavedSearchesModal() {
+                    const content = document.getElementById('saved-searches-content');
+                    
+                    if (savedSearches.length === 0) {
+                        content.innerHTML = `
+                            <p class="text-center text-gray-500 py-8">Aucune recherche sauvegardée.</p>
+                            <p class="text-center text-sm text-gray-400">Effectuez une recherche puis cliquez sur "Sauvegarder cette recherche"</p>
+                        `;
+                    } else {
+                        content.innerHTML = savedSearches.map(search => `
+                            <div class="bg-white border border-gray-200 p-4 rounded-lg mb-3 hover:shadow-md transition">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-lg text-gray-800">${search.name}</h3>
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            ${search.query ? `Recherche: "${search.query}"` : 'Aucun terme de recherche'}
+                                        </p>
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            Filtre: ${search.filter === 'all' ? 'Tous' : search.filter === 'job' ? 'Emplois' : 'Profils'}
+                                        </p>
+                                        <p class="text-xs text-gray-400 mt-1">
+                                            Sauvegardée le ${new Date(search.date).toLocaleDateString('fr-FR')}
+                                        </p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button onclick="loadSavedSearch(${search.id})" class="text-blue-600 hover:text-blue-800 px-3 py-1 text-sm font-medium">Charger</button>
+                                        <button onclick="deleteSavedSearch(${search.id})" class="text-red-600 hover:text-red-800 px-3 py-1 text-sm font-medium">Supprimer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    openModal('saved-searches-modal');
+                }
+
+                function openSearchHistoryModal() {
+                    const content = document.getElementById('search-history-content');
+                    
+                    if (searchHistory.length === 0) {
+                        content.innerHTML = `<p class="text-center text-gray-500 py-8">Aucun historique de recherche.</p>`;
+                    } else {
+                        content.innerHTML = `
+                            <div class="mb-4 flex justify-end">
+                                <button onclick="clearSearchHistory()" class="text-red-600 hover:text-red-800 text-sm font-medium">Effacer l'historique</button>
+                            </div>
+                            ${searchHistory.map(query => `
+                                <div class="bg-white border border-gray-200 p-3 rounded-lg mb-2 hover:bg-gray-50 transition cursor-pointer" onclick="searchInput.value='${query}'; performSearch(); closeAllModals();">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-history text-gray-400"></i>
+                                        <span class="text-gray-800">${query}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        `;
+                    }
+                    
+                    openModal('search-history-modal');
+                }
+
+                function clearSearchHistory() {
+                    searchHistory = [];
+                    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                    openSearchHistoryModal();
+                }
+                
                 
                 // --- GESTIONNAIRES D'ÉVÉNEMENTS ---
                 document.getElementById('login-form').addEventListener('submit', (e) => { 
@@ -1098,6 +1416,29 @@
                     closeAllModals(); 
                     showToast('Offre publiée !', 'success');
                     e.target.reset();
+                });
+
+                document.getElementById('profile-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const profile = {
+                        name: formData.get('name'),
+                        title: formData.get('title'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        city: formData.get('city'),
+                        experience: formData.get('experience'),
+                        expectedSalary: formData.get('expectedSalary'),
+                        skills: formData.get('skills'),
+                        availability: formData.get('availability'),
+                        remotePreference: formData.get('remotePreference')
+                    };
+                    userProfiles[currentUser.email] = profile;
+                    localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+                    currentUser.name = profile.name;
+                    updateAuthUI();
+                    closeAllModals();
+                    showToast('Profil sauvegardé avec succès !', 'success');
                 });
                 
                 document.getElementById('match-modal').addEventListener('click', (e) => {
@@ -1146,6 +1487,11 @@
                 document.getElementById('sort-by').addEventListener('change', (e) => {
                     currentSort = e.target.value;
                     performSearch();
+                });
+                
+                // Save search button
+                document.getElementById('save-search-btn').addEventListener('click', () => {
+                    saveCurrentSearch();
                 });
                 
                 document.addEventListener('click', (e) => {
