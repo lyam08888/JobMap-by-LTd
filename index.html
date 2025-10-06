@@ -129,6 +129,91 @@
             cursor: not-allowed;
         }
         
+        /* Amélioration des animations pour les modals */
+        .modal-backdrop:not(.hidden) {
+            animation: fadeInBackdrop 0.3s ease-in;
+        }
+        @keyframes fadeInBackdrop {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Style amélioré pour les cartes de matching */
+        .match-card {
+            transition: all 0.2s ease;
+        }
+        .match-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Indicateur de score de compatibilité animé */
+        .compatibility-badge {
+            position: relative;
+            overflow: hidden;
+        }
+        .compatibility-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+        
+        /* Amélioration des boutons */
+        .btn-primary {
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        /* Loading spinner pour les opérations asynchrones */
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Pulse animation pour les notifications importantes */
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Match filter buttons styling */
+        .match-filter-btn {
+            transition: all 0.2s ease;
+        }
+        .match-filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .match-filter-btn.active {
+            font-weight: 600;
+        }
+        
+        
         /* Better scrollbar for panels */
         #results-list::-webkit-scrollbar,
         #advanced-filters::-webkit-scrollbar {
@@ -314,9 +399,9 @@
             <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
             <h2 class="text-2xl font-bold text-center mb-6">Connexion</h2>
             <form id="login-form">
-                <div class="mb-4"><label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label><input type="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <div class="mb-6"><label for="password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label><input type="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Se connecter</button>
+                <div class="mb-4"><label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label><input type="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" required></div>
+                <div class="mb-6"><label for="password" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label><input type="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" required></div>
+                <button type="submit" class="btn-primary w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Se connecter</button>
             </form>
         </div>
     </div>
@@ -325,10 +410,10 @@
             <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
             <h2 class="text-2xl font-bold text-center mb-6">Créer un profil Candidat</h2>
             <form>
-                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label><input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Email</label><input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <div class="mb-6"><label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label><input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-700 transition shadow-lg">Créer mon profil</button>
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label><input type="text" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition" required></div>
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Email</label><input type="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition" required></div>
+                <div class="mb-6"><label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label><input type="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition" required></div>
+                <button type="submit" class="btn-primary w-full bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-700 transition shadow-lg">Créer mon profil</button>
             </form>
         </div>
     </div>
@@ -337,10 +422,10 @@
             <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
             <h2 class="text-2xl font-bold text-center mb-6">Créer un compte Recruteur</h2>
             <form>
-                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Nom de l'entreprise</label><input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Email professionnel</label><input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <div class="mb-6"><label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label><input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition shadow-lg">Créer mon compte</button>
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Nom de l'entreprise</label><input type="text" name="company" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" required></div>
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Email professionnel</label><input type="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" required></div>
+                <div class="mb-6"><label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label><input type="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" required></div>
+                <button type="submit" class="btn-primary w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition shadow-lg">Créer mon compte</button>
             </form>
         </div>
     </div>
@@ -389,7 +474,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Publier l'offre</button>
+                <button type="submit" class="btn-primary w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Publier l'offre</button>
             </form>
         </div>
     </div>
@@ -456,7 +541,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="w-full mt-6 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Sauvegarder le profil</button>
+                <button type="submit" class="btn-primary w-full mt-6 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Sauvegarder le profil</button>
             </form>
         </div>
     </div>
@@ -468,6 +553,10 @@
             <div id="match-modal-header">
                 <h2 class="text-2xl font-bold text-center mb-1">Associer le candidat à une offre</h2>
                 <p class="text-center text-gray-500 mb-4">Offres triées par compatibilité</p>
+            </div>
+            <div class="mb-4 flex gap-2 justify-center">
+                <button id="match-filter-all" class="match-filter-btn active px-4 py-2 text-sm rounded-lg font-medium bg-blue-100 text-blue-700 transition hover:bg-blue-200">Toutes les offres</button>
+                <button id="match-filter-high" class="match-filter-btn px-4 py-2 text-sm rounded-lg font-medium bg-gray-100 text-gray-700 transition hover:bg-gray-200">Meilleures correspondances (50%+)</button>
             </div>
             <div id="match-modal-list" class="overflow-y-auto">
                 <!-- La liste des offres sera injectée ici -->
@@ -611,26 +700,26 @@
                     // Paris
                     { id: 1, type: 'job', title: 'Développeur Full-Stack', company: 'Tech Solutions Inc.', location: { lat: 48.8566, lon: 2.3522 }, city: 'Paris', tags: ['React', 'Node.js', 'TypeScript'], description: 'Nous recherchons un développeur passionné pour rejoindre notre équipe agile. Vous travaillerez sur des projets innovants avec les dernières technologies.', salary: '45000-60000', contractType: 'CDI', experience: 'Confirmé', remote: 'Hybride', postedDate: '2024-01-15' },
                     { id: 3, type: 'job', title: 'Data Scientist Senior', company: 'DataCorp', location: { lat: 48.8698, lon: 2.3344 }, city: 'Paris', tags: ['Python', 'Machine Learning', 'TensorFlow'], description: 'Expert en Machine Learning pour développer des modèles prédictifs.', salary: '55000-75000', contractType: 'CDI', experience: 'Senior', remote: 'Remote', postedDate: '2024-01-10' },
-                    { id: 4, type: 'candidate', name: 'Jean Dupont', title: 'Développeur Backend', location: { lat: 48.8534, lon: 2.3488 }, city: 'Paris', tags: ['Java', 'Spring', 'SQL'], description: 'Développeur Backend avec 8 ans d\'expérience dans le secteur financier.', experience: 'Senior', availability: 'Immédiate', expectedSalary: '50000-65000', email: 'jean.dupont@email.com', phone: '0612345678' },
-                    { id: 2, type: 'candidate', name: 'Alice Martin', title: 'Chef de Projet Digital', location: { lat: 45.7640, lon: 4.8357 }, city: 'Lyon', tags: ['Agile', 'Scrum', 'Gestion'], description: 'Chef de projet expérimentée avec 5 ans d\'expérience dans la gestion de projets web complexes. Certifiée Scrum Master.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '45000-55000', email: 'alice.martin@email.com', phone: '0623456789' },
+                    { id: 4, type: 'candidate', name: 'Jean Dupont', title: 'Développeur Backend', location: { lat: 48.8534, lon: 2.3488 }, city: 'Paris', tags: ['Java', 'Spring', 'SQL'], description: 'Développeur Backend avec 8 ans d\'expérience dans le secteur financier.', experience: 'Senior', availability: 'Immédiate', expectedSalary: '50000-65000', remote: 'Hybride', email: 'jean.dupont@email.com', phone: '0612345678' },
+                    { id: 2, type: 'candidate', name: 'Alice Martin', title: 'Chef de Projet Digital', location: { lat: 45.7640, lon: 4.8357 }, city: 'Lyon', tags: ['Agile', 'Scrum', 'Gestion'], description: 'Chef de projet expérimentée avec 5 ans d\'expérience dans la gestion de projets web complexes. Certifiée Scrum Master.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '45000-55000', remote: 'Hybride', email: 'alice.martin@email.com', phone: '0623456789' },
                     { id: 5, type: 'job', title: 'Designer UI/UX', company: 'Creative Minds', location: { lat: 45.7578, lon: 4.8320 }, city: 'Lyon', tags: ['Figma', 'Adobe XD', 'User Research'], description: 'Nous cherchons un designer talentueux pour créer des interfaces intuitives.', salary: '35000-48000', contractType: 'CDI', experience: 'Confirmé', remote: 'Hybride', postedDate: '2024-01-18' },
-                    { id: 6, type: 'candidate', name: 'Sophie Durand', title: 'Designer UI/UX Junior', location: { lat: 45.7721, lon: 4.8295 }, city: 'Lyon', tags: ['Figma', 'Sketch', 'Wireframing'], description: 'Jeune designer passionnée par l\'expérience utilisateur.', experience: 'Junior', availability: 'Immédiate', expectedSalary: '30000-38000', email: 'sophie.durand@email.com', phone: '0634567890' },
+                    { id: 6, type: 'candidate', name: 'Sophie Durand', title: 'Designer UI/UX Junior', location: { lat: 45.7721, lon: 4.8295 }, city: 'Lyon', tags: ['Figma', 'Sketch', 'Wireframing'], description: 'Jeune designer passionnée par l\'expérience utilisateur.', experience: 'Junior', availability: 'Immédiate', expectedSalary: '30000-38000', remote: 'Présentiel', email: 'sophie.durand@email.com', phone: '0634567890' },
                     { id: 7, type: 'job', title: 'Ingénieur DevOps', company: 'Cloud Services', location: { lat: 43.2965, lon: 5.3698 }, city: 'Marseille', tags: ['AWS', 'Docker', 'Kubernetes'], description: 'Automatisez nos déploiements et gérez notre infrastructure cloud.', salary: '48000-65000', contractType: 'CDI', experience: 'Confirmé', remote: 'Remote', postedDate: '2024-01-12' },
-                    { id: 8, type: 'candidate', name: 'Paul Bernard', title: 'Administrateur Système', location: { lat: 43.3000, lon: 5.4000 }, city: 'Marseille', tags: ['Linux', 'Ansible', 'Networking'], description: 'Admin système avec une forte expertise en sécurité réseau.', experience: 'Senior', availability: '2 mois', expectedSalary: '45000-60000', email: 'paul.bernard@email.com', phone: '0645678901' },
+                    { id: 8, type: 'candidate', name: 'Paul Bernard', title: 'Administrateur Système', location: { lat: 43.3000, lon: 5.4000 }, city: 'Marseille', tags: ['Linux', 'Ansible', 'Networking'], description: 'Admin système avec une forte expertise en sécurité réseau.', experience: 'Senior', availability: '2 mois', expectedSalary: '45000-60000', remote: 'Remote', email: 'paul.bernard@email.com', phone: '0645678901' },
                     { id: 9, type: 'job', title: 'Ingénieur Aéronautique', company: 'AeroSpace Corp', location: { lat: 43.6047, lon: 1.4442 }, city: 'Toulouse', tags: ['CATIA', 'Aérodynamique', 'Matériaux'], description: 'Rejoignez le leader de l\'innovation aérospatiale.', salary: '50000-70000', contractType: 'CDI', experience: 'Senior', remote: 'Présentiel', postedDate: '2024-01-08' },
-                    { id: 10, type: 'candidate', name: 'Lucas Dubois', title: 'Ingénieur Logiciel Embarqué', location: { lat: 43.6000, lon: 1.4400 }, city: 'Toulouse', tags: ['C++', 'RTOS', 'Embarqué'], description: 'Spécialiste des systèmes embarqués critiques.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '42000-58000', email: 'lucas.dubois@email.com', phone: '0656789012' },
+                    { id: 10, type: 'candidate', name: 'Lucas Dubois', title: 'Ingénieur Logiciel Embarqué', location: { lat: 43.6000, lon: 1.4400 }, city: 'Toulouse', tags: ['C++', 'RTOS', 'Embarqué'], description: 'Spécialiste des systèmes embarqués critiques.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '42000-58000', remote: 'Présentiel', email: 'lucas.dubois@email.com', phone: '0656789012' },
                     { id: 11, type: 'job', title: 'Community Manager', company: 'Riviera Communication', location: { lat: 43.7102, lon: 7.2620 }, city: 'Nice', tags: ['Réseaux Sociaux', 'Marketing', 'Contenu'], description: 'Gérez et animez nos communautés en ligne.', salary: '28000-38000', contractType: 'CDI', experience: 'Débutant', remote: 'Hybride', postedDate: '2024-01-20' },
-                    { id: 12, type: 'candidate', name: 'Chloé Garcia', title: 'Spécialiste Marketing Digital', location: { lat: 43.7034, lon: 7.2661 }, city: 'Nice', tags: ['SEO', 'Google Ads', 'Analytics'], description: 'Expert en acquisition de trafic et génération de leads.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '38000-50000', email: 'chloe.garcia@email.com', phone: '0667890123' },
+                    { id: 12, type: 'candidate', name: 'Chloé Garcia', title: 'Spécialiste Marketing Digital', location: { lat: 43.7034, lon: 7.2661 }, city: 'Nice', tags: ['SEO', 'Google Ads', 'Analytics'], description: 'Expert en acquisition de trafic et génération de leads.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '38000-50000', remote: 'Remote', email: 'chloe.garcia@email.com', phone: '0667890123' },
                     { id: 13, type: 'job', title: 'Développeur Mobile iOS', company: 'AppFactory', location: { lat: 47.2184, lon: -1.5536 }, city: 'Nantes', tags: ['Swift', 'UIKit', 'Xcode'], description: 'Créez la prochaine génération de nos applications mobiles.', salary: '40000-55000', contractType: 'CDI', experience: 'Confirmé', remote: 'Hybride', postedDate: '2024-01-16' },
-                    { id: 14, type: 'candidate', name: 'Julien Moreau', title: 'Développeur Android', location: { lat: 47.2150, lon: -1.5500 }, city: 'Nantes', tags: ['Kotlin', 'Android Studio', 'Jetpack'], description: 'Développeur Android passionné par les architectures modernes.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '40000-52000', email: 'julien.moreau@email.com', phone: '0678901234' },
+                    { id: 14, type: 'candidate', name: 'Julien Moreau', title: 'Développeur Android', location: { lat: 47.2150, lon: -1.5500 }, city: 'Nantes', tags: ['Kotlin', 'Android Studio', 'Jetpack'], description: 'Développeur Android passionné par les architectures modernes.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '40000-52000', remote: 'Hybride', email: 'julien.moreau@email.com', phone: '0678901234' },
                     { id: 15, type: 'job', title: 'Juriste en Droit Européen', company: 'EuroLegal', location: { lat: 48.5734, lon: 7.7521 }, city: 'Strasbourg', tags: ['Droit', 'Europe', 'Conformité'], description: 'Conseillez nos clients sur les réglementations européennes.', salary: '42000-58000', contractType: 'CDI', experience: 'Confirmé', remote: 'Présentiel', postedDate: '2024-01-14' },
-                    { id: 16, type: 'candidate', name: 'Laura Petit', title: 'Avocate d\'affaires', location: { lat: 48.5800, lon: 7.7450 }, city: 'Strasbourg', tags: ['Contrats', 'Fusions', 'Acquisitions'], description: 'Avocate spécialisée dans le droit des sociétés.', experience: 'Senior', availability: '3 mois', expectedSalary: '55000-70000', email: 'laura.petit@email.com', phone: '0689012345' },
+                    { id: 16, type: 'candidate', name: 'Laura Petit', title: 'Avocate d\'affaires', location: { lat: 48.5800, lon: 7.7450 }, city: 'Strasbourg', tags: ['Contrats', 'Fusions', 'Acquisitions'], description: 'Avocate spécialisée dans le droit des sociétés.', experience: 'Senior', availability: '3 mois', expectedSalary: '55000-70000', remote: 'Présentiel', email: 'laura.petit@email.com', phone: '0689012345' },
                     { id: 17, type: 'job', title: 'Commercial IT', company: 'Innovatech', location: { lat: 43.6108, lon: 3.8767 }, city: 'Montpellier', tags: ['Vente', 'SaaS', 'Prospection'], description: 'Rejoignez une équipe de vente dynamique et ambitieuse.', salary: '32000-50000', contractType: 'CDI', experience: 'Débutant', remote: 'Hybride', postedDate: '2024-01-19' },
-                    { id: 18, type: 'candidate', name: 'Thomas Leroy', title: 'Business Developer', location: { lat: 43.6150, lon: 3.8700 }, city: 'Montpellier', tags: ['Négociation', 'CRM', 'Closing'], description: 'Chasseur dans l\'âme, expert en développement commercial.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '35000-48000', email: 'thomas.leroy@email.com', phone: '0690123456' },
+                    { id: 18, type: 'candidate', name: 'Thomas Leroy', title: 'Business Developer', location: { lat: 43.6150, lon: 3.8700 }, city: 'Montpellier', tags: ['Négociation', 'CRM', 'Closing'], description: 'Chasseur dans l\'âme, expert en développement commercial.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '35000-48000', remote: 'Hybride', email: 'thomas.leroy@email.com', phone: '0690123456' },
                     { id: 19, type: 'job', title: 'Oenologue', company: 'Grands Vins de Bordeaux', location: { lat: 44.8378, lon: -0.5792 }, city: 'Bordeaux', tags: ['Vin', 'Dégustation', 'Viticulture'], description: 'Participez à l\'élaboration de nos grands crus.', salary: '35000-50000', contractType: 'CDI', experience: 'Confirmé', remote: 'Présentiel', postedDate: '2024-01-17' },
-                    { id: 20, type: 'candidate', name: 'Marie Lambert', title: 'Sommelière', location: { lat: 44.8400, lon: -0.5800 }, city: 'Bordeaux', tags: ['Sommellerie', 'Restauration', 'Conseil'], description: 'Sommelière passionnée avec une connaissance approfondie des vins du monde.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '30000-40000', email: 'marie.lambert@email.com', phone: '0601234567' },
+                    { id: 20, type: 'candidate', name: 'Marie Lambert', title: 'Sommelière', location: { lat: 44.8400, lon: -0.5800 }, city: 'Bordeaux', tags: ['Sommellerie', 'Restauration', 'Conseil'], description: 'Sommelière passionnée avec une connaissance approfondie des vins du monde.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '30000-40000', remote: 'Présentiel', email: 'marie.lambert@email.com', phone: '0601234567' },
                     { id: 21, type: 'job', title: 'Chef de Produit', company: 'Retail Solutions', location: { lat: 50.6292, lon: 3.0573 }, city: 'Lille', tags: ['Product Management', 'Roadmap', 'Marketing'], description: 'Définissez la vision et la stratégie de nos produits.', salary: '45000-62000', contractType: 'CDI', experience: 'Senior', remote: 'Hybride', postedDate: '2024-01-11' },
-                    { id: 22, type: 'candidate', name: 'Antoine Roussel', title: 'Product Owner', location: { lat: 50.6350, lon: 3.0600 }, city: 'Lille', tags: ['Agile', 'Scrum', 'Backlog'], description: 'Product Owner certifié, je fais le pont entre le métier et la technique.', experience: 'Confirmé', availability: '2 mois', expectedSalary: '42000-56000', email: 'antoine.roussel@email.com', phone: '0612345670' },
+                    { id: 22, type: 'candidate', name: 'Antoine Roussel', title: 'Product Owner', location: { lat: 50.6350, lon: 3.0600 }, city: 'Lille', tags: ['Agile', 'Scrum', 'Backlog'], description: 'Product Owner certifié, je fais le pont entre le métier et la technique.', experience: 'Confirmé', availability: '2 mois', expectedSalary: '42000-56000', remote: 'Hybride', email: 'antoine.roussel@email.com', phone: '0612345670' },
                 ];
                 
                 // --- ÉTAT DE PERSISTANCE ---
@@ -915,33 +1004,72 @@
                     // Sort by score
                     jobsWithScores.sort((a, b) => b.matchScore - a.matchScore);
                     
+                    // Store for filtering
+                    window.currentMatchJobs = jobsWithScores;
+                    
                     const matchList = document.getElementById('match-modal-list');
                     const matchHeader = document.getElementById('match-modal-header');
-                    matchHeader.innerHTML = `<h2 class="text-2xl font-bold text-center mb-1">Associer ${candidateToMatch.name}</h2><p class="text-center text-gray-500 mb-4">Offres triées par compatibilité</p>`;
-                    matchList.innerHTML = jobsWithScores.length > 0 ? jobsWithScores.map(job => `
-                        <div class="flex items-start justify-between bg-gray-50 p-4 rounded-lg mb-3 hover:bg-gray-100 transition">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <h4 class="font-semibold text-lg">${job.title}</h4>
-                                    <span class="px-2 py-1 text-xs rounded-full ${
-                                        job.matchScore >= 50 ? 'bg-green-100 text-green-800' :
-                                        job.matchScore >= 30 ? 'bg-yellow-100 text-yellow-800' :
-                                        'bg-gray-100 text-gray-800'
-                                    }">
-                                        ${job.matchScore}% compatible
-                                    </span>
-                                </div>
-                                <p class="text-sm text-gray-600 mb-1">${job.company} - ${job.city}</p>
-                                ${job.matchReasons.length > 0 ? `
-                                    <div class="flex flex-wrap gap-1 mt-2">
-                                        ${job.matchReasons.map(reason => `
-                                            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">${reason}</span>
-                                        `).join('')}
+                    matchHeader.innerHTML = `<h2 class="text-2xl font-bold text-center mb-1">Associer ${candidateToMatch.name}</h2><p class="text-center text-gray-500 mb-4">Offres triées par compatibilité - <span class="text-blue-600 font-semibold">${jobsWithScores.length} offre(s) trouvée(s)</span></p>`;
+                    
+                    // Function to display jobs based on filter
+                    window.displayMatchJobs = (filterType = 'all') => {
+                        const filteredJobs = filterType === 'high' 
+                            ? jobsWithScores.filter(job => job.matchScore >= 50)
+                            : jobsWithScores;
+                        
+                        matchList.innerHTML = filteredJobs.length > 0 ? filteredJobs.map(job => `
+                            <div class="match-card flex items-start justify-between bg-gray-50 p-4 rounded-lg mb-3 hover:bg-gray-100 transition">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <h4 class="font-semibold text-lg">${job.title}</h4>
+                                        <span class="compatibility-badge px-2 py-1 text-xs rounded-full ${
+                                            job.matchScore >= 50 ? 'bg-green-100 text-green-800' :
+                                            job.matchScore >= 30 ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-gray-100 text-gray-800'
+                                        }">
+                                            <i class="fas fa-star mr-1"></i>${job.matchScore}% compatible
+                                        </span>
                                     </div>
-                                ` : ''}
-                            </div>
-                            <button class="select-match-job-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition ml-4" data-job-id="${job.id}">Sélectionner</button>
-                        </div>`).join('') : `<p class="text-center text-gray-500">Aucune offre d'emploi disponible.</p>`;
+                                    <p class="text-sm text-gray-600 mb-1"><i class="fas fa-building mr-1"></i>${job.company} - <i class="fas fa-map-marker-alt mr-1"></i>${job.city}</p>
+                                    ${job.matchReasons.length > 0 ? `
+                                        <div class="flex flex-wrap gap-1 mt-2">
+                                            ${job.matchReasons.map(reason => `
+                                                <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded flex items-center gap-1">
+                                                    <i class="fas fa-check-circle"></i>${reason}
+                                                </span>
+                                            `).join('')}
+                                        </div>
+                                    ` : '<p class="text-xs text-gray-500 mt-2"><i class="fas fa-info-circle mr-1"></i>Aucune correspondance spécifique trouvée</p>'}
+                                </div>
+                                <button class="select-match-job-btn btn-primary bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition ml-4 flex items-center gap-2" data-job-id="${job.id}">
+                                    <i class="fas fa-link"></i>Sélectionner
+                                </button>
+                            </div>`).join('') : `<p class="text-center text-gray-500 py-8"><i class="fas fa-inbox text-4xl mb-3 block text-gray-300"></i>${filterType === 'high' ? 'Aucune offre avec 50%+ de compatibilité trouvée.' : 'Aucune offre d\'emploi disponible.'}</p>`;
+                    };
+                    
+                    displayMatchJobs('all');
+                    
+                    // Setup filter buttons
+                    document.getElementById('match-filter-all').onclick = function() {
+                        document.querySelectorAll('.match-filter-btn').forEach(btn => {
+                            btn.classList.remove('active', 'bg-blue-100', 'text-blue-700');
+                            btn.classList.add('bg-gray-100', 'text-gray-700');
+                        });
+                        this.classList.add('active', 'bg-blue-100', 'text-blue-700');
+                        this.classList.remove('bg-gray-100', 'text-gray-700');
+                        displayMatchJobs('all');
+                    };
+                    
+                    document.getElementById('match-filter-high').onclick = function() {
+                        document.querySelectorAll('.match-filter-btn').forEach(btn => {
+                            btn.classList.remove('active', 'bg-blue-100', 'text-blue-700');
+                            btn.classList.add('bg-gray-100', 'text-gray-700');
+                        });
+                        this.classList.add('active', 'bg-blue-100', 'text-blue-700');
+                        this.classList.remove('bg-gray-100', 'text-gray-700');
+                        displayMatchJobs('high');
+                    };
+                    
                     openModal('match-modal');
                 }
 
@@ -1299,7 +1427,7 @@
                         document.getElementById('filter-remote').value = savedSearch.advancedFilters.remote;
                     }
                     if (savedSearch.advancedFilters.salaryMin) {
-                        document.getElementById('filter-salary').value = savedSearch.advancedFilters.salaryMin;
+                        document.getElementById('filter-salary-min').value = savedSearch.advancedFilters.salaryMin;
                     }
                     
                     performSearch();
@@ -1391,6 +1519,34 @@
                     updateAuthUI(); 
                     closeAllModals(); 
                     showToast('Connexion réussie !', 'success'); 
+                });
+                
+                // Candidate signup form
+                document.getElementById('candidate-signup-modal').querySelector('form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    currentUser = {
+                        name: formData.get('name') || formData.get('email').split('@')[0],
+                        email: formData.get('email'),
+                        type: 'candidate'
+                    };
+                    updateAuthUI();
+                    closeAllModals();
+                    showToast('Compte candidat créé avec succès !', 'success');
+                });
+                
+                // Employer signup form
+                document.getElementById('employer-signup-modal').querySelector('form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    currentUser = {
+                        name: formData.get('company') || formData.get('email').split('@')[0],
+                        email: formData.get('email'),
+                        type: 'recruiter'
+                    };
+                    updateAuthUI();
+                    closeAllModals();
+                    showToast('Compte recruteur créé avec succès !', 'success');
                 });
                 
                 document.getElementById('post-job-form').addEventListener('submit', (e) => { 
