@@ -116,6 +116,41 @@
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
+        
+        /* Style for favorite tabs */
+        .favorites-tab-btn.active {
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+        }
+        
+        /* Loading state for buttons */
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Better scrollbar for panels */
+        #results-list::-webkit-scrollbar,
+        #advanced-filters::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #results-list::-webkit-scrollbar-track,
+        #advanced-filters::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        #results-list::-webkit-scrollbar-thumb,
+        #advanced-filters::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        #results-list::-webkit-scrollbar-thumb:hover,
+        #advanced-filters::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -182,6 +217,58 @@
                             <button class="filter-btn w-1/3 text-center py-2 px-2 rounded-md font-semibold text-sm text-gray-700" data-filter="job">Emplois</button>
                             <button class="filter-btn w-1/3 text-center py-2 px-2 rounded-md font-semibold text-sm text-gray-700" data-filter="candidate">Profils</button>
                         </div>
+                    </div>
+                    <!-- Advanced Filters -->
+                    <div class="mb-3 flex-shrink-0">
+                        <button id="toggle-advanced-filters" class="w-full text-left px-3 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center justify-between">
+                            <span><i class="fas fa-filter mr-2"></i>Filtres avancés</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="advanced-filters" class="hidden mt-2 space-y-2 p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Type de contrat</label>
+                                <select id="filter-contract" class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Tous</option>
+                                    <option value="CDI">CDI</option>
+                                    <option value="CDD">CDD</option>
+                                    <option value="Freelance">Freelance</option>
+                                    <option value="Stage">Stage</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Niveau d'expérience</label>
+                                <select id="filter-experience" class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Tous</option>
+                                    <option value="Débutant">Débutant</option>
+                                    <option value="Junior">Junior</option>
+                                    <option value="Confirmé">Confirmé</option>
+                                    <option value="Senior">Senior</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Télétravail</label>
+                                <select id="filter-remote" class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Tous</option>
+                                    <option value="Remote">100% Remote</option>
+                                    <option value="Hybride">Hybride</option>
+                                    <option value="Présentiel">Présentiel</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Salaire minimum (€)</label>
+                                <input type="number" id="filter-salary-min" placeholder="Ex: 35000" class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sort Options -->
+                    <div class="mb-3 flex-shrink-0">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Trier par</label>
+                        <select id="sort-by" class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                            <option value="relevance">Pertinence</option>
+                            <option value="date">Date (plus récent)</option>
+                            <option value="salary-desc">Salaire (décroissant)</option>
+                            <option value="salary-asc">Salaire (croissant)</option>
+                        </select>
                     </div>
                     <div id="results-count" class="text-sm font-medium text-gray-500 mb-2 flex-shrink-0 hidden"></div>
                     <div id="results-list" class="flex-1 overflow-y-auto pr-2 hidden">
@@ -253,14 +340,48 @@
 
     <!-- Modal pour poster une offre -->
     <div id="post-job-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
-        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-lg m-4 p-8 transform hidden relative">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-lg m-4 p-8 transform hidden relative max-h-[90vh] overflow-y-auto">
             <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
             <h2 class="text-2xl font-bold text-center mb-6">Poster une nouvelle offre</h2>
             <form id="post-job-form">
-                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Titre du poste</label><input type="text" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Ville</label><input type="text" name="city" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
-                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Description</label><textarea name="description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></textarea></div>
-                <div class="mb-6"><label class="block text-sm font-medium text-gray-700 mb-1">Compétences (séparées par des virgules)</label><input type="text" name="tags" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required></div>
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Titre du poste *</label><input type="text" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required></div>
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Ville *</label><input type="text" name="city" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required></div>
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Description *</label><textarea name="description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required></textarea></div>
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-1">Compétences (séparées par des virgules) *</label><input type="text" name="tags" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Ex: React, Node.js, TypeScript" required></div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Type de contrat *</label>
+                        <select name="contractType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                            <option value="CDI">CDI</option>
+                            <option value="CDD">CDD</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Stage">Stage</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Expérience *</label>
+                        <select name="experience" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                            <option value="Débutant">Débutant</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Confirmé">Confirmé</option>
+                            <option value="Senior">Senior</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Salaire (€/an)</label>
+                        <input type="text" name="salary" placeholder="Ex: 35000-50000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Télétravail *</label>
+                        <select name="remote" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                            <option value="Présentiel">Présentiel</option>
+                            <option value="Hybride">Hybride</option>
+                            <option value="Remote">100% Remote</option>
+                        </select>
+                    </div>
+                </div>
                 <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Publier l'offre</button>
             </form>
         </div>
@@ -284,6 +405,43 @@
             </div>
             <div id="match-modal-list" class="overflow-y-auto">
                 <!-- La liste des offres sera injectée ici -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Favoris -->
+    <div id="favorites-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-3xl m-4 p-8 transform hidden relative max-h-[90vh] overflow-y-auto">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
+            <h2 class="text-2xl font-bold text-center mb-6">Mes Favoris</h2>
+            <div id="favorites-tabs" class="flex border-b mb-4">
+                <button class="favorites-tab-btn active px-4 py-2 font-medium text-blue-600 border-b-2 border-blue-600" data-tab="jobs">Offres sauvegardées</button>
+                <button class="favorites-tab-btn px-4 py-2 font-medium text-gray-500 hover:text-gray-700" data-tab="candidates">Candidats sauvegardés</button>
+            </div>
+            <div id="favorites-content">
+                <!-- Le contenu des favoris sera injecté ici -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Applications -->
+    <div id="applications-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-3xl m-4 p-8 transform hidden relative max-h-[90vh] overflow-y-auto">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
+            <h2 class="text-2xl font-bold text-center mb-6">Mes Candidatures</h2>
+            <div id="applications-content">
+                <!-- Les candidatures seront injectées ici -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Recruiter Dashboard -->
+    <div id="dashboard-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 z-[1050] hidden flex items-center justify-center">
+        <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-4xl m-4 p-8 transform hidden relative max-h-[90vh] overflow-y-auto">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times fa-2x"></i></button>
+            <h2 class="text-2xl font-bold text-center mb-6">Tableau de bord Recruteur</h2>
+            <div id="dashboard-content">
+                <!-- Le tableau de bord sera injecté ici -->
             </div>
         </div>
     </div>
@@ -343,6 +501,13 @@
                 // --- ÉTAT DE L'APPLICATION ---
                 let currentUser = null; 
                 let currentFilter = 'all';
+                let currentSort = 'relevance';
+                let advancedFilters = {
+                    contractType: '',
+                    experience: '',
+                    remote: '',
+                    salaryMin: null
+                };
                 let routingControl = null;
                 let userLocation = { lat: 48.85884, lon: 2.29435 }; // Position par défaut
                 let userLocationMarker = null;
@@ -356,29 +521,34 @@
                 // --- DONNÉES FICTIVES ---
                 let data = [
                     // Paris
-                    { id: 1, type: 'job', title: 'Développeur Full-Stack', company: 'Tech Solutions Inc.', location: { lat: 48.8566, lon: 2.3522 }, city: 'Paris', tags: ['React', 'Node.js', 'TypeScript'], description: 'Nous recherchons un développeur passionné pour rejoindre notre équipe agile. Vous travaillerez sur des projets innovants avec les dernières technologies.' },
-                    { id: 3, type: 'job', title: 'Data Scientist Senior', company: 'DataCorp', location: { lat: 48.8698, lon: 2.3344 }, city: 'Paris', tags: ['Python', 'Machine Learning', 'TensorFlow'], description: 'Expert en Machine Learning pour développer des modèles prédictifs.' },
-                    { id: 4, type: 'candidate', name: 'Jean Dupont', title: 'Développeur Backend', location: { lat: 48.8534, lon: 2.3488 }, city: 'Paris', tags: ['Java', 'Spring', 'SQL'], description: 'Développeur Backend avec 8 ans d\'expérience dans le secteur financier.' },
-                    { id: 2, type: 'candidate', name: 'Alice Martin', title: 'Chef de Projet Digital', location: { lat: 45.7640, lon: 4.8357 }, city: 'Lyon', tags: ['Agile', 'Scrum', 'Gestion'], description: 'Chef de projet expérimentée avec 5 ans d\'expérience dans la gestion de projets web complexes. Certifiée Scrum Master.' },
-                    { id: 5, type: 'job', title: 'Designer UI/UX', company: 'Creative Minds', location: { lat: 45.7578, lon: 4.8320 }, city: 'Lyon', tags: ['Figma', 'Adobe XD', 'User Research'], description: 'Nous cherchons un designer talentueux pour créer des interfaces intuitives.' },
-                    { id: 6, type: 'candidate', name: 'Sophie Durand', title: 'Designer UI/UX Junior', location: { lat: 45.7721, lon: 4.8295 }, city: 'Lyon', tags: ['Figma', 'Sketch', 'Wireframing'], description: 'Jeune designer passionnée par l\'expérience utilisateur.' },
-                    { id: 7, type: 'job', title: 'Ingénieur DevOps', company: 'Cloud Services', location: { lat: 43.2965, lon: 5.3698 }, city: 'Marseille', tags: ['AWS', 'Docker', 'Kubernetes'], description: 'Automatisez nos déploiements et gérez notre infrastructure cloud.' },
-                    { id: 8, type: 'candidate', name: 'Paul Bernard', title: 'Administrateur Système', location: { lat: 43.3000, lon: 5.4000 }, city: 'Marseille', tags: ['Linux', 'Ansible', 'Networking'], description: 'Admin système avec une forte expertise en sécurité réseau.' },
-                    { id: 9, type: 'job', title: 'Ingénieur Aéronautique', company: 'AeroSpace Corp', location: { lat: 43.6047, lon: 1.4442 }, city: 'Toulouse', tags: ['CATIA', 'Aérodynamique', 'Matériaux'], description: 'Rejoignez le leader de l\'innovation aérospatiale.' },
-                    { id: 10, type: 'candidate', name: 'Lucas Dubois', title: 'Ingénieur Logiciel Embarqué', location: { lat: 43.6000, lon: 1.4400 }, city: 'Toulouse', tags: ['C++', 'RTOS', 'Embarqué'], description: 'Spécialiste des systèmes embarqués critiques.' },
-                    { id: 11, type: 'job', title: 'Community Manager', company: 'Riviera Communication', location: { lat: 43.7102, lon: 7.2620 }, city: 'Nice', tags: ['Réseaux Sociaux', 'Marketing', 'Contenu'], description: 'Gérez et animez nos communautés en ligne.' },
-                    { id: 12, type: 'candidate', name: 'Chloé Garcia', title: 'Spécialiste Marketing Digital', location: { lat: 43.7034, lon: 7.2661 }, city: 'Nice', tags: ['SEO', 'Google Ads', 'Analytics'], description: 'Expert en acquisition de trafic et génération de leads.' },
-                    { id: 13, type: 'job', title: 'Développeur Mobile iOS', company: 'AppFactory', location: { lat: 47.2184, lon: -1.5536 }, city: 'Nantes', tags: ['Swift', 'UIKit', 'Xcode'], description: 'Créez la prochaine génération de nos applications mobiles.' },
-                    { id: 14, type: 'candidate', name: 'Julien Moreau', title: 'Développeur Android', location: { lat: 47.2150, lon: -1.5500 }, city: 'Nantes', tags: ['Kotlin', 'Android Studio', 'Jetpack'], description: 'Développeur Android passionné par les architectures modernes.' },
-                    { id: 15, type: 'job', title: 'Juriste en Droit Européen', company: 'EuroLegal', location: { lat: 48.5734, lon: 7.7521 }, city: 'Strasbourg', tags: ['Droit', 'Europe', 'Conformité'], description: 'Conseillez nos clients sur les réglementations européennes.' },
-                    { id: 16, type: 'candidate', name: 'Laura Petit', title: 'Avocate d\'affaires', location: { lat: 48.5800, lon: 7.7450 }, city: 'Strasbourg', tags: ['Contrats', 'Fusions', 'Acquisitions'], description: 'Avocate spécialisée dans le droit des sociétés.' },
-                    { id: 17, type: 'job', title: 'Commercial IT', company: 'Innovatech', location: { lat: 43.6108, lon: 3.8767 }, city: 'Montpellier', tags: ['Vente', 'SaaS', 'Prospection'], description: 'Rejoignez une équipe de vente dynamique et ambitieuse.' },
-                    { id: 18, type: 'candidate', name: 'Thomas Leroy', title: 'Business Developer', location: { lat: 43.6150, lon: 3.8700 }, city: 'Montpellier', tags: ['Négociation', 'CRM', 'Closing'], description: 'Chasseur dans l\'âme, expert en développement commercial.' },
-                    { id: 19, type: 'job', title: 'Oenologue', company: 'Grands Vins de Bordeaux', location: { lat: 44.8378, lon: -0.5792 }, city: 'Bordeaux', tags: ['Vin', 'Dégustation', 'Viticulture'], description: 'Participez à l\'élaboration de nos grands crus.' },
-                    { id: 20, type: 'candidate', name: 'Marie Lambert', title: 'Sommelière', location: { lat: 44.8400, lon: -0.5800 }, city: 'Bordeaux', tags: ['Sommellerie', 'Restauration', 'Conseil'], description: 'Sommelière passionnée avec une connaissance approfondie des vins du monde.' },
-                    { id: 21, type: 'job', title: 'Chef de Produit', company: 'Retail Solutions', location: { lat: 50.6292, lon: 3.0573 }, city: 'Lille', tags: ['Product Management', 'Roadmap', 'Marketing'], description: 'Définissez la vision et la stratégie de nos produits.' },
-                    { id: 22, type: 'candidate', name: 'Antoine Roussel', title: 'Product Owner', location: { lat: 50.6350, lon: 3.0600 }, city: 'Lille', tags: ['Agile', 'Scrum', 'Backlog'], description: 'Product Owner certifié, je fais le pont entre le métier et la technique.' },
+                    { id: 1, type: 'job', title: 'Développeur Full-Stack', company: 'Tech Solutions Inc.', location: { lat: 48.8566, lon: 2.3522 }, city: 'Paris', tags: ['React', 'Node.js', 'TypeScript'], description: 'Nous recherchons un développeur passionné pour rejoindre notre équipe agile. Vous travaillerez sur des projets innovants avec les dernières technologies.', salary: '45000-60000', contractType: 'CDI', experience: 'Confirmé', remote: 'Hybride', postedDate: '2024-01-15' },
+                    { id: 3, type: 'job', title: 'Data Scientist Senior', company: 'DataCorp', location: { lat: 48.8698, lon: 2.3344 }, city: 'Paris', tags: ['Python', 'Machine Learning', 'TensorFlow'], description: 'Expert en Machine Learning pour développer des modèles prédictifs.', salary: '55000-75000', contractType: 'CDI', experience: 'Senior', remote: 'Remote', postedDate: '2024-01-10' },
+                    { id: 4, type: 'candidate', name: 'Jean Dupont', title: 'Développeur Backend', location: { lat: 48.8534, lon: 2.3488 }, city: 'Paris', tags: ['Java', 'Spring', 'SQL'], description: 'Développeur Backend avec 8 ans d\'expérience dans le secteur financier.', experience: 'Senior', availability: 'Immédiate', expectedSalary: '50000-65000', email: 'jean.dupont@email.com', phone: '0612345678' },
+                    { id: 2, type: 'candidate', name: 'Alice Martin', title: 'Chef de Projet Digital', location: { lat: 45.7640, lon: 4.8357 }, city: 'Lyon', tags: ['Agile', 'Scrum', 'Gestion'], description: 'Chef de projet expérimentée avec 5 ans d\'expérience dans la gestion de projets web complexes. Certifiée Scrum Master.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '45000-55000', email: 'alice.martin@email.com', phone: '0623456789' },
+                    { id: 5, type: 'job', title: 'Designer UI/UX', company: 'Creative Minds', location: { lat: 45.7578, lon: 4.8320 }, city: 'Lyon', tags: ['Figma', 'Adobe XD', 'User Research'], description: 'Nous cherchons un designer talentueux pour créer des interfaces intuitives.', salary: '35000-48000', contractType: 'CDI', experience: 'Confirmé', remote: 'Hybride', postedDate: '2024-01-18' },
+                    { id: 6, type: 'candidate', name: 'Sophie Durand', title: 'Designer UI/UX Junior', location: { lat: 45.7721, lon: 4.8295 }, city: 'Lyon', tags: ['Figma', 'Sketch', 'Wireframing'], description: 'Jeune designer passionnée par l\'expérience utilisateur.', experience: 'Junior', availability: 'Immédiate', expectedSalary: '30000-38000', email: 'sophie.durand@email.com', phone: '0634567890' },
+                    { id: 7, type: 'job', title: 'Ingénieur DevOps', company: 'Cloud Services', location: { lat: 43.2965, lon: 5.3698 }, city: 'Marseille', tags: ['AWS', 'Docker', 'Kubernetes'], description: 'Automatisez nos déploiements et gérez notre infrastructure cloud.', salary: '48000-65000', contractType: 'CDI', experience: 'Confirmé', remote: 'Remote', postedDate: '2024-01-12' },
+                    { id: 8, type: 'candidate', name: 'Paul Bernard', title: 'Administrateur Système', location: { lat: 43.3000, lon: 5.4000 }, city: 'Marseille', tags: ['Linux', 'Ansible', 'Networking'], description: 'Admin système avec une forte expertise en sécurité réseau.', experience: 'Senior', availability: '2 mois', expectedSalary: '45000-60000', email: 'paul.bernard@email.com', phone: '0645678901' },
+                    { id: 9, type: 'job', title: 'Ingénieur Aéronautique', company: 'AeroSpace Corp', location: { lat: 43.6047, lon: 1.4442 }, city: 'Toulouse', tags: ['CATIA', 'Aérodynamique', 'Matériaux'], description: 'Rejoignez le leader de l\'innovation aérospatiale.', salary: '50000-70000', contractType: 'CDI', experience: 'Senior', remote: 'Présentiel', postedDate: '2024-01-08' },
+                    { id: 10, type: 'candidate', name: 'Lucas Dubois', title: 'Ingénieur Logiciel Embarqué', location: { lat: 43.6000, lon: 1.4400 }, city: 'Toulouse', tags: ['C++', 'RTOS', 'Embarqué'], description: 'Spécialiste des systèmes embarqués critiques.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '42000-58000', email: 'lucas.dubois@email.com', phone: '0656789012' },
+                    { id: 11, type: 'job', title: 'Community Manager', company: 'Riviera Communication', location: { lat: 43.7102, lon: 7.2620 }, city: 'Nice', tags: ['Réseaux Sociaux', 'Marketing', 'Contenu'], description: 'Gérez et animez nos communautés en ligne.', salary: '28000-38000', contractType: 'CDI', experience: 'Débutant', remote: 'Hybride', postedDate: '2024-01-20' },
+                    { id: 12, type: 'candidate', name: 'Chloé Garcia', title: 'Spécialiste Marketing Digital', location: { lat: 43.7034, lon: 7.2661 }, city: 'Nice', tags: ['SEO', 'Google Ads', 'Analytics'], description: 'Expert en acquisition de trafic et génération de leads.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '38000-50000', email: 'chloe.garcia@email.com', phone: '0667890123' },
+                    { id: 13, type: 'job', title: 'Développeur Mobile iOS', company: 'AppFactory', location: { lat: 47.2184, lon: -1.5536 }, city: 'Nantes', tags: ['Swift', 'UIKit', 'Xcode'], description: 'Créez la prochaine génération de nos applications mobiles.', salary: '40000-55000', contractType: 'CDI', experience: 'Confirmé', remote: 'Hybride', postedDate: '2024-01-16' },
+                    { id: 14, type: 'candidate', name: 'Julien Moreau', title: 'Développeur Android', location: { lat: 47.2150, lon: -1.5500 }, city: 'Nantes', tags: ['Kotlin', 'Android Studio', 'Jetpack'], description: 'Développeur Android passionné par les architectures modernes.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '40000-52000', email: 'julien.moreau@email.com', phone: '0678901234' },
+                    { id: 15, type: 'job', title: 'Juriste en Droit Européen', company: 'EuroLegal', location: { lat: 48.5734, lon: 7.7521 }, city: 'Strasbourg', tags: ['Droit', 'Europe', 'Conformité'], description: 'Conseillez nos clients sur les réglementations européennes.', salary: '42000-58000', contractType: 'CDI', experience: 'Confirmé', remote: 'Présentiel', postedDate: '2024-01-14' },
+                    { id: 16, type: 'candidate', name: 'Laura Petit', title: 'Avocate d\'affaires', location: { lat: 48.5800, lon: 7.7450 }, city: 'Strasbourg', tags: ['Contrats', 'Fusions', 'Acquisitions'], description: 'Avocate spécialisée dans le droit des sociétés.', experience: 'Senior', availability: '3 mois', expectedSalary: '55000-70000', email: 'laura.petit@email.com', phone: '0689012345' },
+                    { id: 17, type: 'job', title: 'Commercial IT', company: 'Innovatech', location: { lat: 43.6108, lon: 3.8767 }, city: 'Montpellier', tags: ['Vente', 'SaaS', 'Prospection'], description: 'Rejoignez une équipe de vente dynamique et ambitieuse.', salary: '32000-50000', contractType: 'CDI', experience: 'Débutant', remote: 'Hybride', postedDate: '2024-01-19' },
+                    { id: 18, type: 'candidate', name: 'Thomas Leroy', title: 'Business Developer', location: { lat: 43.6150, lon: 3.8700 }, city: 'Montpellier', tags: ['Négociation', 'CRM', 'Closing'], description: 'Chasseur dans l\'âme, expert en développement commercial.', experience: 'Confirmé', availability: 'Immédiate', expectedSalary: '35000-48000', email: 'thomas.leroy@email.com', phone: '0690123456' },
+                    { id: 19, type: 'job', title: 'Oenologue', company: 'Grands Vins de Bordeaux', location: { lat: 44.8378, lon: -0.5792 }, city: 'Bordeaux', tags: ['Vin', 'Dégustation', 'Viticulture'], description: 'Participez à l\'élaboration de nos grands crus.', salary: '35000-50000', contractType: 'CDI', experience: 'Confirmé', remote: 'Présentiel', postedDate: '2024-01-17' },
+                    { id: 20, type: 'candidate', name: 'Marie Lambert', title: 'Sommelière', location: { lat: 44.8400, lon: -0.5800 }, city: 'Bordeaux', tags: ['Sommellerie', 'Restauration', 'Conseil'], description: 'Sommelière passionnée avec une connaissance approfondie des vins du monde.', experience: 'Confirmé', availability: '1 mois', expectedSalary: '30000-40000', email: 'marie.lambert@email.com', phone: '0601234567' },
+                    { id: 21, type: 'job', title: 'Chef de Produit', company: 'Retail Solutions', location: { lat: 50.6292, lon: 3.0573 }, city: 'Lille', tags: ['Product Management', 'Roadmap', 'Marketing'], description: 'Définissez la vision et la stratégie de nos produits.', salary: '45000-62000', contractType: 'CDI', experience: 'Senior', remote: 'Hybride', postedDate: '2024-01-11' },
+                    { id: 22, type: 'candidate', name: 'Antoine Roussel', title: 'Product Owner', location: { lat: 50.6350, lon: 3.0600 }, city: 'Lille', tags: ['Agile', 'Scrum', 'Backlog'], description: 'Product Owner certifié, je fais le pont entre le métier et la technique.', experience: 'Confirmé', availability: '2 mois', expectedSalary: '42000-56000', email: 'antoine.roussel@email.com', phone: '0612345670' },
                 ];
+                
+                // --- ÉTAT DE PERSISTANCE ---
+                let savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+                let savedCandidates = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
+                let applications = JSON.parse(localStorage.getItem('applications') || '[]');
 
                 // --- FONCTIONS UTILITAIRES (CORRECTION: restaurées) ---
 
@@ -401,6 +571,77 @@
                         toast.classList.remove('show');
                         toast.addEventListener('transitionend', () => toast.remove());
                     }, 3000);
+                }
+
+                function toggleFavorite(itemId, itemType) {
+                    const storageKey = itemType === 'job' ? 'savedJobs' : 'savedCandidates';
+                    const savedItems = itemType === 'job' ? savedJobs : savedCandidates;
+                    const index = savedItems.indexOf(itemId);
+                    
+                    if (index > -1) {
+                        savedItems.splice(index, 1);
+                        showToast('Retiré des favoris', 'info');
+                    } else {
+                        savedItems.push(itemId);
+                        showToast('Ajouté aux favoris !', 'success');
+                    }
+                    
+                    localStorage.setItem(storageKey, JSON.stringify(savedItems));
+                    if (itemType === 'job') savedJobs = savedItems;
+                    else savedCandidates = savedItems;
+                    
+                    return savedItems.includes(itemId);
+                }
+
+                function isFavorite(itemId, itemType) {
+                    return itemType === 'job' ? savedJobs.includes(itemId) : savedCandidates.includes(itemId);
+                }
+
+                function applyToJob(jobId, candidateName, candidateEmail, coverLetter) {
+                    const application = {
+                        id: Date.now(),
+                        jobId: jobId,
+                        candidateName: candidateName || currentUser?.name || 'Candidat',
+                        candidateEmail: candidateEmail || currentUser?.email || '',
+                        coverLetter: coverLetter || '',
+                        status: 'Envoyée',
+                        date: new Date().toISOString()
+                    };
+                    applications.push(application);
+                    localStorage.setItem('applications', JSON.stringify(applications));
+                    showToast('Candidature envoyée avec succès !', 'success');
+                }
+
+                function getApplicationsForJob(jobId) {
+                    return applications.filter(app => app.jobId === jobId);
+                }
+
+                function sortData(dataToSort) {
+                    const sorted = [...dataToSort];
+                    switch(currentSort) {
+                        case 'date':
+                            sorted.sort((a, b) => {
+                                const dateA = a.postedDate ? new Date(a.postedDate) : new Date(0);
+                                const dateB = b.postedDate ? new Date(b.postedDate) : new Date(0);
+                                return dateB - dateA;
+                            });
+                            break;
+                        case 'salary-desc':
+                            sorted.sort((a, b) => {
+                                const salaryA = a.salary ? parseInt(a.salary.split('-')[1]) : 0;
+                                const salaryB = b.salary ? parseInt(b.salary.split('-')[1]) : 0;
+                                return salaryB - salaryA;
+                            });
+                            break;
+                        case 'salary-asc':
+                            sorted.sort((a, b) => {
+                                const salaryA = a.salary ? parseInt(a.salary.split('-')[0]) : 0;
+                                const salaryB = b.salary ? parseInt(b.salary.split('-')[0]) : 0;
+                                return salaryA - salaryB;
+                            });
+                            break;
+                    }
+                    return sorted;
                 }
 
                 function openModal(modalId) {
@@ -432,9 +673,18 @@
                     if (currentUser) {
                         html = `
                             <div class="p-2"><p class="font-semibold text-gray-800">Bonjour, ${currentUser.name}</p><p class="text-sm text-gray-500">${currentUser.email}</p></div><hr class="my-2">
-                            ${currentUser.type === 'recruiter' ? `<a href="#" id="post-job-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Poster une offre</a><a href="#" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Gérer mes offres</a>` : ''}
-                            ${currentUser.type === 'candidate' ? `<a href="#" id="my-profile-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Mon Profil</a>` : ''}
-                            <a href="#" id="logout-btn" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md">Se déconnecter</a>`;
+                            ${currentUser.type === 'recruiter' ? `
+                                <a href="#" id="post-job-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-plus-circle mr-2"></i>Poster une offre</a>
+                                <a href="#" id="dashboard-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-chart-line mr-2"></i>Tableau de bord</a>
+                                <a href="#" id="view-favorites-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-heart mr-2"></i>Favoris</a>
+                            ` : ''}
+                            ${currentUser.type === 'candidate' ? `
+                                <a href="#" id="my-profile-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-user mr-2"></i>Mon Profil</a>
+                                <a href="#" id="my-applications-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-file-alt mr-2"></i>Mes candidatures</a>
+                                <a href="#" id="view-favorites-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-heart mr-2"></i>Favoris</a>
+                            ` : ''}
+                            <hr class="my-2">
+                            <a href="#" id="logout-btn" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md"><i class="fas fa-sign-out-alt mr-2"></i>Se déconnecter</a>`;
                     } else {
                         html = `
                             <a href="#" id="login-btn" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md"><i class="fas fa-sign-in-alt w-5 text-center"></i><span>Se connecter</span></a><hr class="my-2">
@@ -449,6 +699,9 @@
                         menuContent.querySelector('#logout-btn')?.addEventListener('click', (e) => { e.preventDefault(); currentUser = null; updateAuthUI(); showToast('Vous avez été déconnecté.', 'info'); });
                         menuContent.querySelector('#post-job-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('post-job-modal'); });
                         menuContent.querySelector('#my-profile-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('profile-modal'); });
+                        menuContent.querySelector('#view-favorites-btn')?.addEventListener('click', (e) => { e.preventDefault(); openFavoritesModal(); });
+                        menuContent.querySelector('#my-applications-btn')?.addEventListener('click', (e) => { e.preventDefault(); openApplicationsModal(); });
+                        menuContent.querySelector('#dashboard-btn')?.addEventListener('click', (e) => { e.preventDefault(); openDashboardModal(); });
                     } else {
                         menuContent.querySelector('#login-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('login-modal'); });
                         menuContent.querySelector('#signup-candidate-btn')?.addEventListener('click', (e) => { e.preventDefault(); openModal('candidate-signup-modal'); });
@@ -505,23 +758,167 @@
                     openModal('match-modal');
                 }
 
+                function openFavoritesModal() {
+                    const modal = document.getElementById('favorites-modal');
+                    const content = document.getElementById('favorites-content');
+                    
+                    function showFavorites(type) {
+                        const items = type === 'jobs' ? 
+                            data.filter(d => d.type === 'job' && savedJobs.includes(d.id)) :
+                            data.filter(d => d.type === 'candidate' && savedCandidates.includes(d.id));
+                        
+                        if (items.length === 0) {
+                            content.innerHTML = `<p class="text-center text-gray-500 py-8">Aucun favori pour le moment.</p>`;
+                            return;
+                        }
+                        
+                        content.innerHTML = items.map(item => `
+                            <div class="bg-white border border-gray-200 p-4 rounded-lg mb-3 hover:shadow-md transition">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-lg text-gray-800">${item.title || item.name}</h3>
+                                        <p class="text-gray-600">${item.type === 'job' ? item.company : item.title}</p>
+                                        <p class="text-sm text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${item.city}</p>
+                                        ${item.salary ? `<p class="text-sm text-green-600 mt-1"><i class="fas fa-euro-sign mr-1"></i>${item.salary}€/an</p>` : ''}
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button onclick="showDetailsModal(${item.id})" class="text-blue-500 hover:text-blue-700 px-3 py-1 text-sm">Voir</button>
+                                        <button onclick="toggleFavorite(${item.id}, '${item.type}'); openFavoritesModal();" class="text-red-500 hover:text-red-700 px-3 py-1 text-sm"><i class="fas fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    document.querySelectorAll('.favorites-tab-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('.favorites-tab-btn').forEach(b => {
+                                b.classList.remove('active', 'text-blue-600', 'border-b-2', 'border-blue-600');
+                                b.classList.add('text-gray-500');
+                            });
+                            this.classList.add('active', 'text-blue-600', 'border-b-2', 'border-blue-600');
+                            this.classList.remove('text-gray-500');
+                            showFavorites(this.dataset.tab);
+                        });
+                    });
+                    
+                    showFavorites('jobs');
+                    openModal('favorites-modal');
+                }
+
+                function openApplicationsModal() {
+                    const content = document.getElementById('applications-content');
+                    
+                    if (applications.length === 0) {
+                        content.innerHTML = `<p class="text-center text-gray-500 py-8">Vous n'avez pas encore postulé à des offres.</p>`;
+                    } else {
+                        content.innerHTML = applications.map(app => {
+                            const job = data.find(j => j.id === app.jobId);
+                            if (!job) return '';
+                            return `
+                                <div class="bg-white border border-gray-200 p-4 rounded-lg mb-3">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-bold text-lg">${job.title}</h3>
+                                            <p class="text-gray-600">${job.company}</p>
+                                            <p class="text-sm text-gray-500 mt-1">Postulé le ${new Date(app.date).toLocaleDateString('fr-FR')}</p>
+                                        </div>
+                                        <span class="px-3 py-1 text-sm rounded-full ${
+                                            app.status === 'Envoyée' ? 'bg-blue-100 text-blue-800' :
+                                            app.status === 'En cours' ? 'bg-yellow-100 text-yellow-800' :
+                                            app.status === 'Acceptée' ? 'bg-green-100 text-green-800' :
+                                            'bg-red-100 text-red-800'
+                                        }">${app.status}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    
+                    openModal('applications-modal');
+                }
+
+                function openDashboardModal() {
+                    const content = document.getElementById('dashboard-content');
+                    const recruiterJobs = data.filter(j => j.type === 'job' && j.company === currentUser.name);
+                    const totalApplications = applications.filter(app => 
+                        recruiterJobs.some(job => job.id === app.jobId)
+                    ).length;
+                    
+                    content.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <div class="text-3xl font-bold text-blue-600">${recruiterJobs.length}</div>
+                                <div class="text-gray-600">Offres publiées</div>
+                            </div>
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <div class="text-3xl font-bold text-green-600">${totalApplications}</div>
+                                <div class="text-gray-600">Candidatures reçues</div>
+                            </div>
+                            <div class="bg-purple-50 p-6 rounded-lg">
+                                <div class="text-3xl font-bold text-purple-600">${savedCandidates.length}</div>
+                                <div class="text-gray-600">Candidats sauvegardés</div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold mb-4">Vos offres d'emploi</h3>
+                        ${recruiterJobs.length === 0 ? 
+                            `<p class="text-gray-500 text-center py-8">Aucune offre publiée. <a href="#" onclick="openModal('post-job-modal')" class="text-blue-600 hover:underline">Publier une offre</a></p>` :
+                            recruiterJobs.map(job => {
+                                const jobApplications = getApplicationsForJob(job.id);
+                                return `
+                                    <div class="bg-white border border-gray-200 p-4 rounded-lg mb-3">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-bold text-lg">${job.title}</h4>
+                                                <p class="text-sm text-gray-500">${job.city} • ${job.contractType} • ${job.remote}</p>
+                                                <p class="text-sm text-gray-600 mt-1">${jobApplications.length} candidature(s)</p>
+                                            </div>
+                                            <button onclick="showDetailsModal(${job.id})" class="text-blue-600 hover:underline text-sm">Voir détails</button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')
+                        }
+                    `;
+                    
+                    openModal('dashboard-modal');
+                }
+
                 // --- FONCTIONS PRINCIPALES DE LA CARTE ---
                 function displayData(filteredData, showList = true) {
                     markerClusters.clearLayers();
                     resultsList.innerHTML = '';
                     resultsList.classList.toggle('hidden', !(showList && firstInteraction));
                     resultsCount.classList.toggle('hidden', !(showList && firstInteraction));
-                    resultsCount.textContent = `${filteredData.length} résultat(s) trouvé(s)`;
+                    
+                    const sortedData = sortData(filteredData);
+                    resultsCount.textContent = `${sortedData.length} résultat(s) trouvé(s)`;
 
-                    filteredData.forEach(item => {
+                    sortedData.forEach(item => {
                         const markerHtml = `<div class="custom-marker-icon w-8 h-8 ${item.type === 'job' ? 'bg-blue-500' : 'bg-emerald-500'}"><i class="fas ${item.type === 'job' ? 'fa-briefcase' : 'fa-user'}"></i></div>`;
                         const icon = L.divIcon({ className: '', html: markerHtml, iconSize: [32, 32], iconAnchor: [16, 16] });
                         const marker = L.marker([item.location.lat, item.location.lon], { icon: icon });
-                        marker.bindPopup(`<div class="popup-title">${item.title}</div><div class="popup-company">${item.type === 'job' ? item.company : (item.name || '')}</div><button class="view-details-btn bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded-full w-full" data-id="${item.id}">Voir détails</button>`);
+                        marker.bindPopup(`<div class="popup-title">${item.title || item.name}</div><div class="popup-company">${item.type === 'job' ? item.company : (item.title || '')}</div><button class="view-details-btn bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded-full w-full" data-id="${item.id}">Voir détails</button>`);
                         markerClusters.addLayer(marker);
 
                         const cardColor = item.type === 'job' ? 'border-l-4 border-blue-500' : 'border-l-4 border-emerald-500';
-                        resultsList.innerHTML += `<div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer mb-3 ${cardColor}" data-id="${item.id}" data-lat="${item.location.lat}" data-lon="${item.location.lon}"><h3 class="font-bold text-gray-800">${item.title}</h3><p class="text-sm text-gray-600">${item.type === 'job' ? item.company : item.name}</p><p class="text-xs text-gray-400 mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${item.city}</p></div>`;
+                        const salaryInfo = item.salary ? `<p class="text-xs text-green-600 mt-1"><i class="fas fa-euro-sign mr-1"></i>${item.salary}€/an</p>` : '';
+                        const remoteInfo = item.remote ? `<span class="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded">${item.remote}</span>` : '';
+                        
+                        resultsList.innerHTML += `<div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer mb-3 ${cardColor}" data-id="${item.id}" data-lat="${item.location.lat}" data-lon="${item.location.lon}">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-gray-800">${item.title || item.name}</h3>
+                                    <p class="text-sm text-gray-600">${item.type === 'job' ? item.company : item.title}</p>
+                                    <p class="text-xs text-gray-400 mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${item.city} ${remoteInfo}</p>
+                                    ${salaryInfo}
+                                </div>
+                                <button onclick="event.stopPropagation(); toggleFavorite(${item.id}, '${item.type}'); this.querySelector('i').classList.toggle('fas'); this.querySelector('i').classList.toggle('far');" class="text-red-500 hover:text-red-700 ml-2">
+                                    <i class="${isFavorite(item.id, item.type) ? 'fas' : 'far'} fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>`;
                     });
                 }
                 
@@ -530,26 +927,100 @@
                     if (!item) return;
                     const cardColor = item.type === 'job' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800';
                     const modalContent = document.getElementById('details-modal-content');
+                    const isSaved = isFavorite(item.id, item.type);
                     
                     let actionButtonsHtml = '';
+                    
+                    // Favorite button
+                    actionButtonsHtml += `<button onclick="toggleFavorite(${item.id}, '${item.type}'); showDetailsModal(${item.id});" class="bg-red-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-600 transition shadow-lg flex items-center gap-2">
+                        <i class="${isSaved ? 'fas' : 'far'} fa-heart"></i> ${isSaved ? 'Retirer' : 'Sauvegarder'}
+                    </button>`;
+                    
+                    // Route buttons
                     if (!routeStartPoint) {
                         actionButtonsHtml += `<button id="set-start-route-btn" data-id="${item.id}" class="bg-sky-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-map-pin"></i> Départ</button>`;
                     } else if (routeStartPoint.id !== item.id) {
                         actionButtonsHtml += `<button id="calculate-route-btn" data-id="${item.id}" class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-route"></i> Arrivée</button>`;
                     }
-                    if (item.type === 'candidate') {
+                    
+                    // Type-specific buttons
+                    if (item.type === 'candidate' && currentUser?.type === 'recruiter') {
                          actionButtonsHtml += `<button id="match-candidate-btn" data-id="${item.id}" class="bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-link"></i> Associer</button>`;
+                    }
+                    
+                    if (item.type === 'job' && currentUser?.type === 'candidate') {
+                        const hasApplied = applications.some(app => app.jobId === item.id && app.candidateEmail === currentUser.email);
+                        if (!hasApplied) {
+                            actionButtonsHtml += `<button id="apply-btn" data-id="${item.id}" class="bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-700 transition shadow-lg flex items-center gap-2"><i class="fas fa-paper-plane"></i> Postuler</button>`;
+                        } else {
+                            actionButtonsHtml += `<span class="bg-gray-300 text-gray-600 font-bold py-3 px-6 rounded-lg flex items-center gap-2"><i class="fas fa-check-circle"></i> Candidature envoyée</span>`;
+                        }
+                    }
+
+                    // Build additional info
+                    let additionalInfo = '';
+                    if (item.type === 'job') {
+                        additionalInfo = `
+                            <div class="grid grid-cols-2 gap-4 mt-6">
+                                ${item.salary ? `<div><h4 class="font-semibold text-gray-800 mb-1">Salaire</h4><p class="text-gray-700"><i class="fas fa-euro-sign mr-2 text-green-600"></i>${item.salary}€/an</p></div>` : ''}
+                                ${item.contractType ? `<div><h4 class="font-semibold text-gray-800 mb-1">Type de contrat</h4><p class="text-gray-700"><i class="fas fa-file-contract mr-2 text-blue-600"></i>${item.contractType}</p></div>` : ''}
+                                ${item.experience ? `<div><h4 class="font-semibold text-gray-800 mb-1">Expérience</h4><p class="text-gray-700"><i class="fas fa-graduation-cap mr-2 text-purple-600"></i>${item.experience}</p></div>` : ''}
+                                ${item.remote ? `<div><h4 class="font-semibold text-gray-800 mb-1">Télétravail</h4><p class="text-gray-700"><i class="fas fa-home mr-2 text-indigo-600"></i>${item.remote}</p></div>` : ''}
+                            </div>
+                        `;
+                    } else {
+                        additionalInfo = `
+                            <div class="grid grid-cols-2 gap-4 mt-6">
+                                ${item.experience ? `<div><h4 class="font-semibold text-gray-800 mb-1">Expérience</h4><p class="text-gray-700"><i class="fas fa-graduation-cap mr-2 text-purple-600"></i>${item.experience}</p></div>` : ''}
+                                ${item.availability ? `<div><h4 class="font-semibold text-gray-800 mb-1">Disponibilité</h4><p class="text-gray-700"><i class="fas fa-clock mr-2 text-blue-600"></i>${item.availability}</p></div>` : ''}
+                                ${item.expectedSalary ? `<div><h4 class="font-semibold text-gray-800 mb-1">Prétention salariale</h4><p class="text-gray-700"><i class="fas fa-euro-sign mr-2 text-green-600"></i>${item.expectedSalary}€/an</p></div>` : ''}
+                                ${item.email ? `<div><h4 class="font-semibold text-gray-800 mb-1">Email</h4><p class="text-gray-700"><i class="fas fa-envelope mr-2 text-indigo-600"></i>${item.email}</p></div>` : ''}
+                            </div>
+                        `;
                     }
 
                     modalContent.innerHTML = `
-                        <div class="flex items-start gap-4 mb-4"><div class="text-2xl w-12 h-12 flex items-center justify-center rounded-lg ${cardColor}"><i class="fas ${item.type === 'job' ? 'fa-briefcase' : 'fa-user'}"></i></div><div><h2 class="text-2xl font-bold text-gray-900">${item.title}</h2><p class="text-lg text-gray-600 font-medium">${item.type === 'job' ? item.company : item.name}</p><p class="text-sm text-gray-500"><i class="fas fa-map-marker-alt mr-1"></i>${item.city}</p></div></div>
-                        <h4 class="font-semibold mt-6 mb-2 text-gray-800">Description</h4><p class="text-gray-700">${item.description}</p>
-                        <h4 class="font-semibold mt-6 mb-2 text-gray-800">Compétences</h4><div class="flex flex-wrap gap-2">${item.tags.map(tag => `<span class="bg-gray-200 text-gray-700 px-3 py-1 text-sm rounded-full">${tag}</span>`).join('')}</div>
-                        <div class="mt-8 flex flex-wrap justify-end gap-4">${actionButtonsHtml}<button class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition shadow-lg">Contacter</button></div>`;
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="text-2xl w-12 h-12 flex items-center justify-center rounded-lg ${cardColor}">
+                                <i class="fas ${item.type === 'job' ? 'fa-briefcase' : 'fa-user'}"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900">${item.title || item.name}</h2>
+                                <p class="text-lg text-gray-600 font-medium">${item.type === 'job' ? item.company : item.title}</p>
+                                <p class="text-sm text-gray-500"><i class="fas fa-map-marker-alt mr-1"></i>${item.city}</p>
+                            </div>
+                        </div>
+                        ${additionalInfo}
+                        <h4 class="font-semibold mt-6 mb-2 text-gray-800">Description</h4>
+                        <p class="text-gray-700">${item.description}</p>
+                        <h4 class="font-semibold mt-6 mb-2 text-gray-800">Compétences</h4>
+                        <div class="flex flex-wrap gap-2">${item.tags.map(tag => `<span class="bg-gray-200 text-gray-700 px-3 py-1 text-sm rounded-full">${tag}</span>`).join('')}</div>
+                        <div class="mt-8 flex flex-wrap justify-end gap-4">${actionButtonsHtml}</div>`;
                     
-                    modalContent.querySelector('#set-start-route-btn')?.addEventListener('click', e => { routeStartPoint = data.find(d => d.id == e.currentTarget.dataset.id); showToast("Point de départ défini. Choisissez une destination.", "info"); closeAllModals(); });
-                    modalContent.querySelector('#calculate-route-btn')?.addEventListener('click', e => { const endPoint = data.find(d => d.id == e.currentTarget.dataset.id); calculateRoute(routeStartPoint.location, endPoint.location); routeStartPoint = null; closeAllModals(); });
-                    modalContent.querySelector('#match-candidate-btn')?.addEventListener('click', e => { const candidateId = e.currentTarget.dataset.id; closeAllModals(); openMatchModal(candidateId); });
+                    modalContent.querySelector('#set-start-route-btn')?.addEventListener('click', e => { 
+                        routeStartPoint = data.find(d => d.id == e.currentTarget.dataset.id); 
+                        showToast("Point de départ défini. Choisissez une destination.", "info"); 
+                        closeAllModals(); 
+                    });
+                    
+                    modalContent.querySelector('#calculate-route-btn')?.addEventListener('click', e => { 
+                        const endPoint = data.find(d => d.id == e.currentTarget.dataset.id); 
+                        calculateRoute(routeStartPoint.location, endPoint.location); 
+                        routeStartPoint = null; 
+                        closeAllModals(); 
+                    });
+                    
+                    modalContent.querySelector('#match-candidate-btn')?.addEventListener('click', e => { 
+                        const candidateId = e.currentTarget.dataset.id; 
+                        closeAllModals(); 
+                        openMatchModal(candidateId); 
+                    });
+                    
+                    modalContent.querySelector('#apply-btn')?.addEventListener('click', e => {
+                        const jobId = parseInt(e.currentTarget.dataset.id);
+                        applyToJob(jobId, currentUser.name, currentUser.email, 'Candidature via JobMap');
+                        showDetailsModal(jobId);
+                    });
 
                     openModal('details-modal');
                 }
@@ -557,33 +1028,163 @@
                 function performSearch() {
                     firstInteraction = true;
                     const query = searchInput.value.toLowerCase();
-                    const filteredData = data.filter(item => (currentFilter === 'all' || item.type === currentFilter) && (!query || item.title.toLowerCase().includes(query) || (item.company && item.company.toLowerCase().includes(query)) || (item.name && item.name.toLowerCase().includes(query)) || item.city.toLowerCase().includes(query) || item.tags.some(tag => tag.toLowerCase().includes(query))));
+                    
+                    const filteredData = data.filter(item => {
+                        // Basic filter
+                        if (currentFilter !== 'all' && item.type !== currentFilter) return false;
+                        
+                        // Search query
+                        if (query) {
+                            const matchesQuery = 
+                                (item.title && item.title.toLowerCase().includes(query)) ||
+                                (item.company && item.company.toLowerCase().includes(query)) ||
+                                (item.name && item.name.toLowerCase().includes(query)) ||
+                                (item.city && item.city.toLowerCase().includes(query)) ||
+                                item.tags.some(tag => tag.toLowerCase().includes(query));
+                            if (!matchesQuery) return false;
+                        }
+                        
+                        // Advanced filters (only for jobs)
+                        if (item.type === 'job') {
+                            if (advancedFilters.contractType && item.contractType !== advancedFilters.contractType) return false;
+                            if (advancedFilters.experience && item.experience !== advancedFilters.experience) return false;
+                            if (advancedFilters.remote && item.remote !== advancedFilters.remote) return false;
+                            if (advancedFilters.salaryMin && item.salary) {
+                                const maxSalary = parseInt(item.salary.split('-')[1]);
+                                if (maxSalary < advancedFilters.salaryMin) return false;
+                            }
+                        }
+                        
+                        return true;
+                    });
+                    
                     displayData(filteredData, true);
                 }
                 
                 // --- GESTIONNAIRES D'ÉVÉNEMENTS ---
-                document.getElementById('login-form').addEventListener('submit', (e) => { e.preventDefault(); currentUser = { name: 'Recruteur Test', email: e.target.email.value, type: 'recruiter' }; updateAuthUI(); closeAllModals(); showToast('Connexion réussie !', 'success'); });
-                document.getElementById('post-job-form').addEventListener('submit', (e) => { e.preventDefault(); const formData = new FormData(e.target); const newJob = { id: Date.now(), type: 'job', title: formData.get('title'), company: currentUser.name, location: userLocation, city: formData.get('city'), tags: formData.get('tags').split(','), description: formData.get('description') }; data.push(newJob); displayData(data, true); closeAllModals(); showToast('Offre publiée !', 'success'); });
+                document.getElementById('login-form').addEventListener('submit', (e) => { 
+                    e.preventDefault(); 
+                    const formData = new FormData(e.target);
+                    currentUser = { 
+                        name: 'Recruteur Test', 
+                        email: formData.get('email'), 
+                        type: 'recruiter' 
+                    }; 
+                    updateAuthUI(); 
+                    closeAllModals(); 
+                    showToast('Connexion réussie !', 'success'); 
+                });
+                
+                document.getElementById('post-job-form').addEventListener('submit', (e) => { 
+                    e.preventDefault(); 
+                    const formData = new FormData(e.target); 
+                    const newJob = { 
+                        id: Date.now(), 
+                        type: 'job', 
+                        title: formData.get('title'), 
+                        company: currentUser.name, 
+                        location: userLocation, 
+                        city: formData.get('city'), 
+                        tags: formData.get('tags').split(',').map(t => t.trim()), 
+                        description: formData.get('description'),
+                        salary: formData.get('salary'),
+                        contractType: formData.get('contractType'),
+                        experience: formData.get('experience'),
+                        remote: formData.get('remote'),
+                        postedDate: new Date().toISOString().split('T')[0]
+                    }; 
+                    data.push(newJob); 
+                    displayData(data, true); 
+                    closeAllModals(); 
+                    showToast('Offre publiée !', 'success');
+                    e.target.reset();
+                });
+                
                 document.getElementById('match-modal').addEventListener('click', (e) => {
                     const target = e.target.closest('.select-match-job-btn');
                     if (target && candidateToMatch) {
                         const job = data.find(j => j.id == target.dataset.jobId);
-                        if (job) { calculateRoute(candidateToMatch.location, job.location); showToast(`Itinéraire calculé pour ${candidateToMatch.name} vers ${job.title}.`, 'success'); candidateToMatch = null; closeAllModals(); }
+                        if (job) { 
+                            calculateRoute(candidateToMatch.location, job.location); 
+                            showToast(`Itinéraire calculé pour ${candidateToMatch.name} vers ${job.title}.`, 'success'); 
+                            candidateToMatch = null; 
+                            closeAllModals(); 
+                        }
                     }
                 });
+                
+                // Advanced filters toggle
+                document.getElementById('toggle-advanced-filters').addEventListener('click', function() {
+                    const filtersDiv = document.getElementById('advanced-filters');
+                    const icon = this.querySelector('i.fa-chevron-down');
+                    filtersDiv.classList.toggle('hidden');
+                    icon.style.transform = filtersDiv.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+                });
+                
+                // Advanced filters event listeners
+                document.getElementById('filter-contract').addEventListener('change', (e) => {
+                    advancedFilters.contractType = e.target.value;
+                    performSearch();
+                });
+                
+                document.getElementById('filter-experience').addEventListener('change', (e) => {
+                    advancedFilters.experience = e.target.value;
+                    performSearch();
+                });
+                
+                document.getElementById('filter-remote').addEventListener('change', (e) => {
+                    advancedFilters.remote = e.target.value;
+                    performSearch();
+                });
+                
+                document.getElementById('filter-salary-min').addEventListener('input', (e) => {
+                    advancedFilters.salaryMin = e.target.value ? parseInt(e.target.value) : null;
+                    performSearch();
+                });
+                
+                // Sort dropdown
+                document.getElementById('sort-by').addEventListener('change', (e) => {
+                    currentSort = e.target.value;
+                    performSearch();
+                });
+                
                 document.addEventListener('click', (e) => {
                     if (e.target.matches('.close-modal-btn, .modal-backdrop') && !e.target.closest('.modal-panel')) closeAllModals();
                     if (!e.target.closest('#user-menu-button') && !e.target.closest('#user-menu')) userMenu.classList.add('scale-95', 'opacity-0', 'hidden');
                 });
+                
                 userMenuButton.addEventListener('click', () => userMenu.classList.toggle('scale-95'));
                 searchInput.addEventListener('keyup', performSearch);
+                
                 filterContainer.addEventListener('click', (e) => {
                     const target = e.target.closest('button');
-                    if(target) { filterContainer.querySelector('.active').classList.remove('active'); target.classList.add('active'); currentFilter = target.dataset.filter; performSearch(); }
+                    if(target) { 
+                        filterContainer.querySelector('.active').classList.remove('active'); 
+                        target.classList.add('active'); 
+                        currentFilter = target.dataset.filter; 
+                        performSearch(); 
+                    }
                 });
-                resultsList.addEventListener('click', e => { const card = e.target.closest('[data-id]'); if (card) map.flyTo([card.dataset.lat, card.dataset.lon], 13); });
-                map.on('popupopen', e => e.popup.getElement().querySelector('.view-details-btn')?.addEventListener('click', (ev) => showDetailsModal(ev.currentTarget.dataset.id)));
-                routingControls.addEventListener('click', (e) => { const target = e.target.closest('.routing-mode-btn'); if(target && routingControl) { routingControls.querySelector('.active').classList.remove('active'); target.classList.add('active'); calculateRoute(routingControl.getWaypoints()[0].latLng, routingControl.getWaypoints()[1].latLng, target.dataset.mode); } });
+                
+                resultsList.addEventListener('click', e => { 
+                    const card = e.target.closest('[data-id]'); 
+                    if (card && !e.target.closest('button')) {
+                        const itemId = parseInt(card.dataset.id);
+                        showDetailsModal(itemId);
+                    }
+                });
+                
+                map.on('popupopen', e => e.popup.getElement().querySelector('.view-details-btn')?.addEventListener('click', (ev) => showDetailsModal(parseInt(ev.currentTarget.dataset.id))));
+                
+                routingControls.addEventListener('click', (e) => { 
+                    const target = e.target.closest('.routing-mode-btn'); 
+                    if(target && routingControl) { 
+                        routingControls.querySelector('.active').classList.remove('active'); 
+                        target.classList.add('active'); 
+                        calculateRoute(routingControl.getWaypoints()[0].latLng, routingControl.getWaypoints()[1].latLng, target.dataset.mode); 
+                    } 
+                });
+                
                 clearRouteBtn.addEventListener('click', clearRoute);
                 
                 // --- INITIALISATION FINALE ---
